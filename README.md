@@ -13,7 +13,7 @@
 ### MVP
 
 - [x] 💙 Bare main menu
-- [ ] 💙 Ability to pick a level in the main menu
+- [x] 💙 Ability to pick a level in the main menu
 - [ ] 💙 Slime mold spawns in the level
 - [ ] 💙 Time limit, with a timer bar on top of the level
 - [ ] 💙 Beat (everything flashes slightly, maybe?)

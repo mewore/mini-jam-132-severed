@@ -90,11 +90,6 @@ public class Global : Node
         // }
     }
 
-    public static bool CanMoveInDirection(int dx, int dy)
-    {
-        return new File().FileExists(GetLevelScenePath(currentLevel + 1));
-    }
-
     public static bool TryWinLevel(int score)
     {
         while (bestScores.Count < currentLevel)
@@ -109,7 +104,7 @@ public class Global : Node
     public static int GetLastLevel()
     {
         int lastLevel = 0;
-        while (new File().FileExists(GetLevelScenePath(lastLevel + 1)))
+        while (LevelExists(lastLevel + 1))
         {
             lastLevel++;
         }
@@ -141,7 +136,9 @@ public class Global : Node
         return false;
     }
 
-    private static string GetLevelScenePath(int level)
+    public static bool LevelExists(int level) => new File().FileExists(GetLevelScenePath(level));
+
+    public static string GetLevelScenePath(int level)
     {
         return "res://scenes/levels/Level-" + level + ".tscn";
     }

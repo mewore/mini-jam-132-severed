@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://ui/title-theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/Title.cs" type="Script" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://ui/title-theme-lower.tres" type="Theme" id=4]
 [ext_resource path="res://ui/MainMenu.cs" type="Script" id=5]
 [ext_resource path="res://ui/white.png" type="Texture" id=6]
+[ext_resource path="res://ui/LevelNodeContainer.tscn" type="PackedScene" id=7]
+[ext_resource path="res://ui/LevelNode.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
@@ -35,8 +37,8 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=5]
 shader = SubResource( 4 )
-shader_param/amplitude = 0.2
-shader_param/frequency = 15.0
+shader_param/amplitude = 0.241
+shader_param/frequency = 21.548
 shader_param/speed = 1.0
 
 [sub_resource type="Gradient" id=2]
@@ -65,6 +67,7 @@ region_enabled = true
 region_rect = Rect2( 0, 0, 1024, 600 )
 
 [node name="BackgroundGlow" type="Sprite" parent="Background"]
+modulate = Color( 1, 1, 1, 0.509804 )
 self_modulate = Color( 0.619608, 0.588235, 0.537255, 1 )
 material = SubResource( 5 )
 position = Vector2( 510, 323 )
@@ -105,3 +108,25 @@ margin_top = 600.0
 margin_right = 1024.0
 margin_bottom = 600.0
 alignment = 2
+
+[node name="LevelNodes" parent="." instance=ExtResource( 7 )]
+position = Vector2( 512, 152 )
+
+[node name="StartingPoint" parent="LevelNodes" instance=ExtResource( 8 )]
+modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
+levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
+
+[node name="LevelNode" parent="LevelNodes" instance=ExtResource( 8 )]
+modulate = Color( 0.933333, 0.937255, 0.211765, 1 )
+position = Vector2( 0, 80 )
+level = 1
+levelColor = Color( 0.933333, 0.937255, 0.211765, 1 )
+
+[node name="LevelNode2" parent="LevelNodes" instance=ExtResource( 8 )]
+modulate = Color( 0.211765, 0.937255, 0.462745, 1 )
+position = Vector2( -64, 168 )
+level = 2
+previousLevel = 1
+levelColor = Color( 0.211765, 0.937255, 0.462745, 1 )
+
+[connection signal="Refreshed" from="LevelNodes" to="." method="_on_LevelNodes_Refreshed"]

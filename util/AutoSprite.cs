@@ -30,10 +30,6 @@ public class AutoSprite : Sprite
 
     public override void _Process(float delta)
     {
-        if (!Engine.EditorHint)
-        {
-            return;
-        }
         now += delta;
         // Rotation += Mathf.Pi * delta;
         if (height <= 0) height = width;
