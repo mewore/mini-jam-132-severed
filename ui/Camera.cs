@@ -23,7 +23,7 @@ public class Camera : Camera2D
     private float now = 0f;
 
     [Export]
-    private NodePath copyCamera;
+    private NodePath copyCamera = null;
 
     private Camera2D copyCameraNode;
 
@@ -43,7 +43,7 @@ public class Camera : Camera2D
         float amount = 1f - (now - shakenAt) / shakeDuration;
         amount *= amount;
         float mew = now * Mathf.Pi * speedup;
-        copyCameraNode.Offset = Offset = new Vector2(Mathf.Cos(mew / shakePeriodX), Mathf.Sin(mew / shakePeriodX)) * shakeAmplitude;
+        copyCameraNode.Offset = Offset = new Vector2(Mathf.Cos(mew / shakePeriodX), Mathf.Sin(mew / shakePeriodY)) * shakeAmplitude;
     }
 
     public void Shake()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Godot;
 
 public enum FlightResult { NONE, SUCCEEDED, FAILED, ABORTED }
@@ -82,6 +83,8 @@ public class Global : Node
 
     public static bool ReturningToMenu = false;
 
+    private static readonly Regex LEVEL_NUMBER_REGEX = new Regex(@"(\d+)\.tscn\b", RegexOptions.Compiled);
+
     public override void _Ready()
     {
         // if (save_file_exists(SETTINGS_SAVE_FILE))
@@ -141,6 +144,12 @@ public class Global : Node
     public static string GetLevelScenePath(int level)
     {
         return "res://scenes/levels/Level-" + level + ".tscn";
+    }
+
+    public static int GetLevelPathNumber(string levelPath)
+    {
+        Match match = LEVEL_NUMBER_REGEX.Match(levelPath);
+        return match.Success ? match.Value.Replace(".tscn", "").ToInt() : -1;
     }
 
     public static void SaveGameData()

@@ -60,5 +60,12 @@ public class LevelNodeLine : Line2D, Selectable
             targetNode.Position
         };
         Gradient.Colors = new Color[] { previousNode.LevelColor, targetNode.LevelColor };
+        Visible = true;
+    }
+
+    public void Deactivate()
+    {
+        from = to = null;
+        Visible = false;
     }
 }

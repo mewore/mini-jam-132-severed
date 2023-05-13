@@ -1,5 +1,14 @@
-[gd_scene format=2]
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://environment/Level.cs" type="Script" id=1]
+[ext_resource path="res://scenes/MainMenu.tscn" type="PackedScene" id=2]
+[ext_resource path="res://entities/mold/SlimeMold.tscn" type="PackedScene" id=3]
 
 [node name="Level" type="Node2D"]
+script = ExtResource( 1 )
+mainMenuScene = ExtResource( 2 )
+levelNumber = -1
 
 [node name="Game" type="Node2D" parent="."]
+
+[node name="SlimeMold" parent="Game" instance=ExtResource( 3 )]

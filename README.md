@@ -14,7 +14,8 @@
 
 - [x] 💙 Bare main menu
 - [x] 💙 Ability to pick a level in the main menu
-- [ ] 💙 Slime mold spawns in the level
+- [x] 💙 Enable navigation to levels depending on whether the previous level has been cleared or not 
+- [x] 💙 Slime mold spawns in the level
 - [ ] 💙 Time limit, with a timer bar on top of the level
 - [ ] 💙 Beat (everything flashes slightly, maybe?)
 - [ ] 💙 (Probably not) Line power meter - pressing the [FILL] (W/S/X/RMB) key fills it (the better-synced, the better)
@@ -29,7 +30,8 @@
 - [ ] 💙 Pause menu
 - [ ] 💙 Auto-saving and auto-loading
 - [ ] 💙 Show the best scores of levels
-- [ ] 💙 Show the level background at the end
+- [ ] 💙 Ability to navigate to or display level backgrounds from the main menu
+- [ ] 💙 Volume controls
 - [ ] 💜 Backgrounds
 - [ ] 💛 Music
 - [ ] 💛 Line start creation SFX
@@ -45,6 +47,8 @@
 
 ### Advanced features
 
+- [ ] 💙 Show the level background at the end of the level
+- [ ] 💙 Nice transitions
 - [ ] 💙 Ability to view backgrounds
 - [ ] 💜 Icon
 - [ ] 💟 Publish `0.3.0`

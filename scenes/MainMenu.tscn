@@ -116,15 +116,22 @@ position = Vector2( 512, 152 )
 modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
 levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
 
-[node name="LevelNode" parent="LevelNodes" instance=ExtResource( 8 )]
+[node name="LevelNode4" parent="LevelNodes" instance=ExtResource( 8 )]
 modulate = Color( 0.933333, 0.937255, 0.211765, 1 )
-position = Vector2( 0, 80 )
+position = Vector2( 16, 72 )
 level = 1
 levelColor = Color( 0.933333, 0.937255, 0.211765, 1 )
 
 [node name="LevelNode2" parent="LevelNodes" instance=ExtResource( 8 )]
 modulate = Color( 0.211765, 0.937255, 0.462745, 1 )
-position = Vector2( -64, 168 )
+position = Vector2( 16, 192 )
+level = 2
+previousLevel = 1
+levelColor = Color( 0.211765, 0.937255, 0.462745, 1 )
+
+[node name="LevelNode3" parent="LevelNodes" instance=ExtResource( 8 )]
+modulate = Color( 0.211765, 0.937255, 0.462745, 1 )
+position = Vector2( 128, 120 )
 level = 2
 previousLevel = 1
 levelColor = Color( 0.211765, 0.937255, 0.462745, 1 )

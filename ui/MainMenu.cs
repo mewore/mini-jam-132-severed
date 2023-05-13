@@ -4,9 +4,6 @@ using Godot;
 
 public class MainMenu : VBoxContainer
 {
-    private const int NODE_SELECTION_DISTANCE = 16;
-    private static readonly int NODE_SELECTION_DISTANCE_SQUARED = NODE_SELECTION_DISTANCE * NODE_SELECTION_DISTANCE;
-
     private const int EDGE_SELECTION_DISTANCE = 64;
     private static readonly int EDGE_SELECTION_DISTANCE_SQUARED = EDGE_SELECTION_DISTANCE * EDGE_SELECTION_DISTANCE;
 
@@ -83,7 +80,6 @@ public class MainMenu : VBoxContainer
         }
         return result;
     }
-
 
     public void _on_LevelNodes_Refreshed()
     {

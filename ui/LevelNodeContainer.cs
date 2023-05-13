@@ -2,7 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-[Tool]
 public class LevelNodeContainer : Node2D
 {
     [Signal]
@@ -45,7 +44,7 @@ public class LevelNodeContainer : Node2D
 
     public void _on_LevelNodes_child_entered_tree(Node node)
     {
-        if (!(Engine.EditorHint && node is LevelNode))
+        if (!(Engine.EditorHint && node is LevelNode) || lineContainer == null)
         {
             return;
         }
@@ -55,7 +54,7 @@ public class LevelNodeContainer : Node2D
 
     public void _on_LevelNodes_child_exiting_tree(Node node)
     {
-        if (!(Engine.EditorHint && node is LevelNode))
+        if (!(Engine.EditorHint && node is LevelNode) || lineContainer == null)
         {
             return;
         }
@@ -87,9 +86,11 @@ public class LevelNodeContainer : Node2D
         }
         while (lines.Count > activeLineCount)
         {
-            lines[lines.Count - 1].QueueFree();
-            lines.RemoveAt(lines.Count - 1);
+            lines[activeLineCount++].Deactivate();
         }
-        EmitSignal(nameof(Refreshed));
+        if (!Engine.EditorHint)
+        {
+            EmitSignal(nameof(Refreshed));
+        }
     }
 }
