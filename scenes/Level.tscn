@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://environment/Level.cs" type="Script" id=1]
 [ext_resource path="res://scenes/MainMenu.tscn" type="PackedScene" id=2]
@@ -10,6 +10,12 @@
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 0.318182 ), 0.0, 1.0, 0, 0, Vector2( 1, 1 ), 2.36727, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=3]
+colors = PoolColorArray( 0.976471, 0.0156862, 0.781311, 0.4, 0.0185394, 0.905593, 0.949219, 1 )
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 1 )
@@ -29,11 +35,15 @@ addition = 1.0
 
 [node name="Game" type="Node2D" parent="."]
 script = ExtResource( 5 )
+lineSuccessByCloseness = SubResource( 2 )
+lineColourGradient = SubResource( 3 )
 
 [node name="SlimeMold" parent="Game" instance=ExtResource( 3 )]
 
 [node name="SlimeMoldBranch" parent="Game/SlimeMold" instance=ExtResource( 4 )]
 position = Vector2( 553, 312 )
+
+[node name="Lines" type="Node2D" parent="Game"]
 
 [node name="TimerLine" type="Line2D" parent="Game"]
 points = PoolVector2Array( 0, 0, 1024, 0 )
@@ -45,7 +55,6 @@ one_shot = true
 autostart = true
 
 [node name="BeatTimer" type="Timer" parent="Game" groups=["beat_timer"]]
-wait_time = 0.5
 autostart = true
 
 [connection signal="timeout" from="Game/LevelTimer" to="." method="_on_LevelTimer_timeout"]
