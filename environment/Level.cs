@@ -41,4 +41,9 @@ public class Level : Node2D
     {
         GetTree().ChangeSceneTo(mainMenuScene);
     }
+
+    public void _on_LevelTimer_timeout()
+    {
+        GetTree().ChangeSceneTo(mainMenuScene);
+    }
 }

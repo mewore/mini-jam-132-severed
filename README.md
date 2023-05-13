@@ -16,7 +16,7 @@
 - [x] 💙 Ability to pick a level in the main menu
 - [x] 💙 Enable navigation to levels depending on whether the previous level has been cleared or not 
 - [x] 💙 Slime mold spawns in the level
-- [ ] 💙 Time limit, with a timer bar on top of the level
+- [x] 💙 Time limit, with a timer bar on top of the level
 - [ ] 💙 Beat (everything flashes slightly, maybe?)
 - [ ] 💙 (Probably not) Line power meter - pressing the [FILL] (W/S/X/RMB) key fills it (the better-synced, the better)
 - [ ] 💙 Line creation with the [LINE] (Q/A/Z/Space/LMB) key (pressing it at one beat and letting go of it on another beat) - the line power meter is depleted and how much of it is utilized properly depends on how synced the pressing of the key is
