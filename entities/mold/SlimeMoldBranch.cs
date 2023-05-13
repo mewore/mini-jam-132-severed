@@ -8,10 +8,10 @@ public class SlimeMoldBranch : Line2D
     private string slimeMoldBranchScene = "res://entities/mold/SlimeMoldBranch.tscn";
 
     [Export]
-    private float branchTimeMin = 3f;
+    private float branchTimeMin = 1f;
 
     [Export]
-    private float branchTimeMax = 10f;
+    private float branchTimeMax = 5f;
 
     [Export]
     private float speed = 10f;
@@ -32,8 +32,24 @@ public class SlimeMoldBranch : Line2D
     [Export]
     private float speedUp = 1f;
 
+    private float initialSpeedUp;
+
     [Export]
     private int widthDecrement = 2;
+
+    private float initialWidth;
+
+    [Export]
+    private float beatWidthMultiplier = 1.5f;
+
+    [Export(PropertyHint.Range, "0,1")]
+    private float widthDecay = 0.1f;
+
+    [Export]
+    private float beatSpeedMultiplier = 10.5f;
+
+    [Export(PropertyHint.Range, "0,1")]
+    private float speedDecay = 0.1f;
 
     private bool active = true;
 
@@ -62,6 +78,23 @@ public class SlimeMoldBranch : Line2D
             GetNode<Timer>("BranchTimer").Start((float)GD.RandRange(branchTimeMin, branchTimeMax));
         }
         maxAngleSpeed *= Mathf.Pi / 180;
+
+        var beatTimers = GetTree().GetNodesInGroup("beat_timer");
+        if (beatTimers.Count > 0)
+        {
+            (beatTimers[0] as Timer).Connect("timeout", this, nameof(_on_beat));
+        }
+
+        initialSpeedUp = speedUp;
+        initialWidth = Width;
+    }
+
+    public override void _Process(float delta)
+    {
+        if (Width != initialWidth)
+        {
+            Width = Mathf.Lerp(Width, initialWidth, widthDecay);
+        }
     }
 
     public override void _PhysicsProcess(float delta)
@@ -69,6 +102,10 @@ public class SlimeMoldBranch : Line2D
         if (!active)
         {
             return;
+        }
+        if (speedUp != initialSpeedUp)
+        {
+            speedUp = Mathf.Lerp(speedUp, initialSpeedUp, speedDecay);
         }
         delta *= speedUp;
         angleChangeSpeed += currentAngleAcceleration * delta;
@@ -97,11 +134,11 @@ public class SlimeMoldBranch : Line2D
 
         firstMold.Position = secondMold.Position = Position + Points[Points.Length - 1];
         firstMold.motion = secondMold.motion = motion;
-        firstMold.Width = secondMold.Width = Width - widthDecrement;
+        firstMold.Width = secondMold.Width = initialWidth - widthDecrement;
         if (GD.Randf() > 0.5f)
         {
-            firstMold.Width = Width;
-            secondMold.Width = Width / 2;
+            firstMold.Width = initialWidth;
+            secondMold.Width = initialWidth / 2;
         }
         GetParent().AddChild(firstMold);
         if (secondMold.Width > 1f)
@@ -116,5 +153,11 @@ public class SlimeMoldBranch : Line2D
         var bounceBack = Mathf.Abs(speedExtremity) * GD.Randf();
         currentAngleAcceleration = (GD.Randf() * 2 - 1f) * maxAngleAcceleration * Mathf.Pi / 180;
         currentAngleAcceleration = Mathf.Lerp(currentAngleAcceleration, -speedExtremity * maxAngleAcceleration, bounceBack);
+    }
+
+    private void _on_beat()
+    {
+        speedUp = initialSpeedUp * beatSpeedMultiplier;
+        Width = initialWidth * beatWidthMultiplier;
     }
 }

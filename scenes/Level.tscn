@@ -1,15 +1,31 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://environment/Level.cs" type="Script" id=1]
 [ext_resource path="res://scenes/MainMenu.tscn" type="PackedScene" id=2]
 [ext_resource path="res://entities/mold/SlimeMold.tscn" type="PackedScene" id=3]
 [ext_resource path="res://entities/mold/SlimeMoldBranch.tscn" type="PackedScene" id=4]
 [ext_resource path="res://environment/Game.cs" type="Script" id=5]
+[ext_resource path="res://ui/white.png" type="Texture" id=6]
+[ext_resource path="res://util/Pulsating.cs" type="Script" id=7]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+blend_mode = 1
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 1 )
 mainMenuScene = ExtResource( 2 )
 levelNumber = -1
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+self_modulate = Color( 1, 1, 1, 0.0117647 )
+material = SubResource( 1 )
+texture = ExtResource( 6 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 0, 1024, 600 )
+script = ExtResource( 7 )
+addition = 1.0
 
 [node name="Game" type="Node2D" parent="."]
 script = ExtResource( 5 )
@@ -26,6 +42,10 @@ width = 24.0
 [node name="LevelTimer" type="Timer" parent="Game"]
 wait_time = 10.0
 one_shot = true
+autostart = true
+
+[node name="BeatTimer" type="Timer" parent="Game" groups=["beat_timer"]]
+wait_time = 0.5
 autostart = true
 
 [connection signal="timeout" from="Game/LevelTimer" to="." method="_on_LevelTimer_timeout"]
