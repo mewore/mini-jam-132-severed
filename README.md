@@ -20,7 +20,7 @@
 - [x] 💙 Beat - slight flash, the mold thickens and speeds up
 - [ ] 💙 (Probably not) Line power meter - pressing the [FILL] (W/S/X/RMB) key fills it (the better-synced, the better)
 - [x] 💙 Line creation with the [LINE] (Q/A/Z/Space/LMB) key (pressing it at one beat and letting go of it on another beat) - the line power meter is depleted and how much of it is utilized properly depends on how synced the pressing of the key is
-- [ ] 💙 Slime molds avoid growing past lines
+- [x] 💙 Slime molds avoid growing past lines
 - [ ] 💙 The line creation is cancelled if the maximum line success is no matter at which point the [LINE] button is released
 - [ ] 💙 When a line is created onto a slime mold, the slime mold is cut and disintegrates partially
 - [ ] 💙 When the level ends, the lines fade out and the score is displayed

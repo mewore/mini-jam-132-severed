@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://environment/Level.cs" type="Script" id=1]
 [ext_resource path="res://scenes/MainMenu.tscn" type="PackedScene" id=2]
@@ -7,11 +7,12 @@
 [ext_resource path="res://environment/Game.cs" type="Script" id=5]
 [ext_resource path="res://ui/white.png" type="Texture" id=6]
 [ext_resource path="res://util/Pulsating.cs" type="Script" id=7]
+[ext_resource path="res://entities/obstacle/ObstacleLine.tscn" type="PackedScene" id=8]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
 
-[sub_resource type="Curve" id=2]
+[sub_resource type="Curve" id=4]
 _data = [ Vector2( 0, 0.318182 ), 0.0, 1.0, 0, 0, Vector2( 1, 1 ), 2.36727, 0.0, 0, 0 ]
 
 [sub_resource type="Gradient" id=3]
@@ -35,8 +36,9 @@ addition = 1.0
 
 [node name="Game" type="Node2D" parent="."]
 script = ExtResource( 5 )
-lineSuccessByCloseness = SubResource( 2 )
-lineColourGradient = SubResource( 3 )
+obstacleScene = ExtResource( 8 )
+obstacleSuccessByCloseness = SubResource( 4 )
+obstacleColourGradient = SubResource( 3 )
 
 [node name="SlimeMold" parent="Game" instance=ExtResource( 3 )]
 

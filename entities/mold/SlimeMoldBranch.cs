@@ -58,6 +58,16 @@ public class SlimeMoldBranch : Line2D
 
     private List<Vector2> currentPoints = new List<Vector2>(new Vector2[] { Vector2.Zero });
 
+    [Export]
+    private int raycastSamples = 3;
+
+    private float maxLineRepulsion = 3f;
+
+    [Export(PropertyHint.Range, "0,1")]
+    private float visionRange = .25f;
+
+    private RayCast2D rayCast;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -87,6 +97,8 @@ public class SlimeMoldBranch : Line2D
 
         initialSpeedUp = speedUp;
         initialWidth = Width;
+
+        rayCast = GetNode<RayCast2D>("RayCast2D");
     }
 
     public override void _Process(float delta)
@@ -112,6 +124,7 @@ public class SlimeMoldBranch : Line2D
         angleChangeSpeed = Mathf.Clamp(angleChangeSpeed, -maxAngleSpeed, maxAngleSpeed);
         realAngle += angleChangeSpeed * delta;
         Vector2 candidateMotion = Vector2.Right.Rotated(realAngle);
+        realAngle += getRepulsion() * delta;
         if (Mathf.Abs(candidateMotion.AngleTo(motion)) > angleSnap * Mathf.Pi / 180)
         {
             motion = candidateMotion * speed;
@@ -119,6 +132,33 @@ public class SlimeMoldBranch : Line2D
         }
         currentPoints[currentPoints.Count - 1] += motion * delta;
         Points = currentPoints.ToArray();
+    }
+
+    private float getRepulsion()
+    {
+        rayCast.Position = currentPoints[currentPoints.Count - 1];
+        float angleRange = visionRange * Mathf.Pi;
+        float angle = raycastSamples == 1 ? 0f : (-angleRange / 2);
+        float angleStep = angleRange / (raycastSamples - 1);
+        float motionAngle = motion.Angle();
+        float totalRepulsion = 0f;
+
+        for (int sample = 0; sample < raycastSamples; sample++, angle += angleStep)
+        {
+            rayCast.Rotation = motionAngle + angle;
+            rayCast.ForceRaycastUpdate();
+            if (!rayCast.IsColliding())
+            {
+                continue;
+            }
+            float directedRepulsion = Mathf.Abs(angle) < Mathf.Epsilon
+                ? -.5f
+                : -angle * 2 / angleRange;
+            float closeness = 1f - rayCast.GetCollisionPoint().DistanceTo(rayCast.GlobalPosition) / rayCast.CastTo.Length();
+            closeness *= closeness;
+            totalRepulsion += directedRepulsion * maxLineRepulsion * closeness;
+        }
+        return totalRepulsion;
     }
 
     public void _on_BranchTimer_timeout()

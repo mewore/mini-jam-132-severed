@@ -7,22 +7,22 @@ public class Game : Node2D
     private Timer levelTimer;
     private Timer beatTimer;
 
-    private Node lineContainer;
-    private Line2D lineBeingCreated;
-    private float lineCreationStartedAt;
+    [Export]
+    private PackedScene obstacleScene;
+
+    private Node obstacleContainer;
+    private Obstacle obstacleBeingCreated;
+    private float obstacleCreationStartedAt;
     private float initialClosenessToBeat;
 
     [Export]
-    private float lineSuccessLostPerBeat = .25f;
+    private float obstacleSuccessLostPerBeat = .25f;
 
     [Export]
-    private Curve lineSuccessByCloseness;
+    private Curve obstacleSuccessByCloseness;
 
     [Export]
-    private Gradient lineColourGradient;
-
-    [Export]
-    private float lineWidth = 10f;
+    private Gradient obstacleColourGradient;
 
     private float now = 0f;
 
@@ -32,17 +32,15 @@ public class Game : Node2D
         levelTimer = GetNode<Timer>("LevelTimer");
         beatTimer = GetNode<Timer>("BeatTimer");
 
-        lineContainer = GetNode("Lines");
+        obstacleContainer = GetNode("Lines");
     }
 
     public override void _Process(float delta)
     {
         timerLine.Scale = new Vector2(1f - levelTimer.TimeLeft / levelTimer.WaitTime, timerLine.Scale.y);
-        if (lineBeingCreated != null)
+        if (obstacleBeingCreated != null)
         {
-            lineBeingCreated.Points = new Vector2[] { lineBeingCreated.Points[0], GetGlobalMousePosition() };
-            lineBeingCreated.DefaultColor = lineColourGradient.Interpolate(getLineSuccess(getCosmeticClosenessToBeat()));
-            lineBeingCreated.Width = lineWidth * getLineSuccess(getCosmeticClosenessToBeat());
+            obstacleBeingCreated.Success = getLineSuccess(getCosmeticClosenessToBeat());
         }
     }
 
@@ -53,30 +51,18 @@ public class Game : Node2D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionPressed("create_line") && lineBeingCreated == null)
+        if (@event.IsActionPressed("create_line") && obstacleBeingCreated == null && obstacleScene != null)
         {
-            lineBeingCreated = new Line2D();
-            lineBeingCreated.Points = new Vector2[] { GetGlobalMousePosition() };
+            obstacleBeingCreated = obstacleScene.Instance<Obstacle>();
+            obstacleBeingCreated.ColourGradient = obstacleColourGradient;
             initialClosenessToBeat = getClosenessToBeat();
-            lineBeingCreated.DefaultColor = lineColourGradient.Interpolate(initialClosenessToBeat);
-            lineBeingCreated.Width = lineWidth * initialClosenessToBeat;
-            lineContainer.AddChild(lineBeingCreated);
-            lineCreationStartedAt = now;
+            obstacleContainer.AddChild(obstacleBeingCreated as Node);
+            obstacleCreationStartedAt = now;
         }
-        else if (@event.IsActionReleased("create_line") && lineBeingCreated != null)
+        else if (@event.IsActionReleased("create_line") && obstacleBeingCreated != null)
         {
-            float lineSuccess = getLineSuccess();
-            if (now - lineCreationStartedAt < beatTimer.WaitTime / 2 || lineSuccess < .01f)
-            {
-                lineBeingCreated.QueueFree();
-            }
-            else
-            {
-                lineBeingCreated.Points = new Vector2[] { lineBeingCreated.Points[0], GetGlobalMousePosition() };
-                lineBeingCreated.DefaultColor = lineColourGradient.Interpolate(lineSuccess);
-                lineBeingCreated.Width = lineWidth * getLineSuccess(lineSuccess);
-            }
-            lineBeingCreated = null;
+            obstacleBeingCreated.Place(getLineSuccess());
+            obstacleBeingCreated = null;
         }
     }
 
@@ -84,19 +70,19 @@ public class Game : Node2D
 
     private float getLineSuccess(float closenessToBeat)
     {
-        float successLost = Mathf.Max((now - lineCreationStartedAt) / beatTimer.WaitTime - 1f, 0f) * lineSuccessLostPerBeat;
+        float successLost = Mathf.Max((now - obstacleCreationStartedAt) / beatTimer.WaitTime - 1f, 0f) * obstacleSuccessLostPerBeat;
         return Mathf.Max((initialClosenessToBeat + closenessToBeat) * .5f - successLost, 0f);
     }
 
     private float getClosenessToBeat()
     {
         float closenessToBeat = Mathf.Abs(beatTimer.TimeLeft / beatTimer.WaitTime - .5f) * 2f;
-        return lineSuccessByCloseness.InterpolateBaked(closenessToBeat);
+        return obstacleSuccessByCloseness.InterpolateBaked(closenessToBeat);
     }
 
     private float getCosmeticClosenessToBeat()
     {
         float closenessToBeat = Mathf.Max(beatTimer.TimeLeft / beatTimer.WaitTime - .5f, 0f) * 2f;
-        return lineSuccessByCloseness.InterpolateBaked(closenessToBeat);
+        return obstacleSuccessByCloseness.InterpolateBaked(closenessToBeat);
     }
 }

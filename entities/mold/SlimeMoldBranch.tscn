@@ -20,5 +20,8 @@ one_shot = true
 [node name="DirectionChangeTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+cast_to = Vector2( 50, 0 )
+
 [connection signal="timeout" from="BranchTimer" to="." method="_on_BranchTimer_timeout"]
 [connection signal="timeout" from="DirectionChangeTimer" to="." method="_on_DirectionChangeTimer_timeout"]
