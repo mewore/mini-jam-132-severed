@@ -39,7 +39,7 @@
   ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)
 - [x] 💙 Lock levels that haven't been reached yet
 - [x] 💙 Pause menu
-- [ ] 💙 Auto-saving and auto-loading
+- [x] 💙 Auto-saving and auto-loading
 - [ ] 💙 Show the best scores of levels
 - [ ] 💙 Ability to navigate to or display level backgrounds from the main menu
 - [ ] 💙 Volume controls
