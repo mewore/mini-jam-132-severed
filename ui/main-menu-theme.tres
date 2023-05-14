@@ -3,7 +3,7 @@
 [ext_resource path="res://ui/fonts/super-legend-boy/SuperLegendBoy-4w8Y.ttf" type="DynamicFontData" id=1]
 
 [sub_resource type="DynamicFont" id=1]
-size = 9
+size = 27
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 

@@ -38,7 +38,7 @@
 - [x] 💚 Areas and levels based on them
   ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)
 - [x] 💙 Lock levels that haven't been reached yet
-- [ ] 💙 Pause menu
+- [x] 💙 Pause menu
 - [ ] 💙 Auto-saving and auto-loading
 - [ ] 💙 Show the best scores of levels
 - [ ] 💙 Ability to navigate to or display level backgrounds from the main menu
@@ -57,6 +57,8 @@
 
 ### Advanced features
 
+- [ ] 💛 Pause/unpause SFX
+- [ ] 💙 Exit button
 - [ ] 💙 Show warnings for slime molds that are about to spawn
 - [ ] 💙 Show the user if they have tried to make an obstacle too soon (red flashing text, camera shake, etc.)
 - [ ] 💙 Show the level background at the end of the level

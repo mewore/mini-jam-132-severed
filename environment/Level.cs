@@ -10,6 +10,20 @@ public class Level : Node2D
     [Export]
     private int levelNumber;
 
+    private CanvasLayer pauseLayer;
+
+    private bool paused = false;
+    private bool Paused
+    {
+        get => paused;
+        set
+        {
+            paused = value;
+            GetTree().Paused = value;
+            pauseLayer.Visible = value;
+        }
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -21,7 +35,10 @@ public class Level : Node2D
                 Global.CurrentLevel = levelNumber;
             }
         }
+        pauseLayer = GetNode<CanvasLayer>("PauseLayer");
     }
+
+    public void _on_ContinueButton_pressed() => Paused = false;
 
     public void _on_RestartButton_pressed()
     {
@@ -38,6 +55,10 @@ public class Level : Node2D
         if (@event.IsActionPressed("force_restart"))
         {
             _on_RestartButton_pressed();
+        }
+        else if (@event.IsActionPressed("pause"))
+        {
+            Paused = !Paused;
         }
     }
 
