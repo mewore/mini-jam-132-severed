@@ -94,6 +94,10 @@ public class Game : Node2D
         for (int index = 0; index < polygonNodes.Count; index++)
         {
             shapes[index] = (polygonNodes[index] as Polygon2D).Polygon;
+            for (int pointIndex = 0; pointIndex < shapes[index].Length; pointIndex++)
+            {
+                shapes[index][pointIndex] += (polygonNodes[index] as Polygon2D).GlobalPosition;
+            }
         }
     }
 

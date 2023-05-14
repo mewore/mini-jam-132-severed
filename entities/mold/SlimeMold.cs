@@ -51,6 +51,7 @@ public class SlimeMold : Node2D
         {
             branches.Add(GetNode<SlimeMoldBranch>("SlimeMoldBranch"));
         }
+        _on_SpawnTimer_timeout();
     }
 
     public void _on_SpawnTimer_timeout()

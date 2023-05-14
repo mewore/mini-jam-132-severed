@@ -79,6 +79,8 @@ public class SlimeMoldBranch : Line2D
     private readonly List<Line2D> segmentLines = new List<Line2D>();
 
     private bool isDamaged = false;
+    private bool segmentLinesNeedUpdate = false;
+    private bool needsUpdateAfterGrowth = false;
     private readonly SegmentCollection explosions = new SegmentCollection();
 
     private Rect2 precalculatedBoundingRect;
@@ -121,7 +123,7 @@ public class SlimeMoldBranch : Line2D
         {
             Width = Mathf.Lerp(Width, initialWidth, widthDecay);
         }
-        if (isDamaged)
+        if (segmentLinesNeedUpdate)
         {
             updateSegmentLines();
         }
@@ -142,6 +144,7 @@ public class SlimeMoldBranch : Line2D
                 livingSegments.Remove(segment);
             }
             explosions.Clear();
+            segmentLinesNeedUpdate = true;
             isDamaged = true;
         }
         if (!active)
@@ -162,9 +165,14 @@ public class SlimeMoldBranch : Line2D
         {
             velocity = realVelocity;
             currentPoints.Add(currentPoints[currentPoints.Count - 1]);
+            Points = currentPoints.ToArray();
         }
         currentPoints[currentPoints.Count - 1] += velocity * delta;
-        Points = currentPoints.ToArray();
+        Points[Points.Length - 1] = currentPoints[Points.Length - 1];
+        if (isDamaged)
+        {
+            segmentLinesNeedUpdate = true;
+        }
     }
 
     private Vector2 getRepulsion()
@@ -240,7 +248,6 @@ public class SlimeMoldBranch : Line2D
         {
             child.TestIntersection(firstPoint, secondPoint);
         }
-        GD.Print("TestIntersection 1");
         firstPoint = ToLocal(firstPoint);
         secondPoint = ToLocal(secondPoint);
 
@@ -248,7 +255,6 @@ public class SlimeMoldBranch : Line2D
         {
             return;
         }
-        GD.Print("TestIntersection 2");
 
         var totalLength = getTotalLength();
 
@@ -283,7 +289,6 @@ public class SlimeMoldBranch : Line2D
                 damageToChildren = Mathf.Max(damageToChildren, vulnerability - (totalLength - intersectionPos));
             }
         }
-        GD.Print("TestIntersection 3: " + explosions.Count);
 
         if (damageToChildren > 0f)
         {
@@ -362,25 +367,29 @@ public class SlimeMoldBranch : Line2D
             AddChild(line);
             segmentLines.Add(line);
         }
+        List<Vector2[]> pointsForSegments = getPointsForSegment();
         for (int index = 0; index < segmentLines.Count; index++)
         {
-            if (index >= livingSegments.Count)
+            if (index >= pointsForSegments.Count)
             {
                 segmentLines[index].Visible = false;
                 continue;
             }
             segmentLines[index].Visible = true;
             segmentLines[index].Width = Width;
-            (float, float) segment = livingSegments.Segments[index];
             // On second thought, I don't want this (it makes it harder to calculate coverage at the end of the level)
             // segmentLines[index].BeginCapMode = segment.Item1 < Mathf.Epsilon ? LineCapMode.Round : LineCapMode.None;
             // segmentLines[index].EndCapMode = segment.Item2 == Mathf.Inf ? LineCapMode.Round : LineCapMode.None;
-            segmentLines[index].Points = getPointsForSegment(segment);
+            segmentLines[index].Points = pointsForSegments[index];
         }
     }
 
-    private Vector2[] getPointsForSegment((float, float) livingSegment)
+    private List<Vector2[]> getPointsForSegment()
     {
+        var result = new List<Vector2[]>();
+        int livingSegmentIndex = 0;
+        (float, float) livingSegment = livingSegments.Segments[0];
+
         (float, float) lineSegment = (0f, 0f);
         var newPoints = new List<Vector2>();
         for (int index = 1; index < Points.Length; index++)
@@ -389,6 +398,17 @@ public class SlimeMoldBranch : Line2D
             var length = pointDifference.Length();
             var lineDirection = pointDifference / length;
             lineSegment = (lineSegment.Item2, lineSegment.Item2 + length);
+            while (livingSegment.Item2 < lineSegment.Item1)
+            {
+                livingSegmentIndex++;
+                result.Add(newPoints.ToArray());
+                newPoints.Clear();
+                if (livingSegmentIndex >= livingSegments.Count)
+                {
+                    return result;
+                }
+                livingSegment = livingSegments.Segments[livingSegmentIndex];
+            }
             if (lineSegment.Item2 < livingSegment.Item1 || lineSegment.Item1 > livingSegment.Item2)
             {
                 continue;
@@ -407,7 +427,6 @@ public class SlimeMoldBranch : Line2D
                 // livingSegment in lineSegment
                 newPoints.Add(Points[index - 1] + lineDirection * (livingSegment.Item1 - lineSegment.Item1));
                 newPoints.Add(Points[index - 1] + lineDirection * (livingSegment.Item2 - lineSegment.Item1));
-                return newPoints.ToArray();
             }
             else if (livingSegment.Item2 < lineSegment.Item2)
             {
@@ -417,7 +436,6 @@ public class SlimeMoldBranch : Line2D
                     newPoints.Add(Points[index - 1]);
                 }
                 newPoints.Add(Points[index - 1] + lineDirection * (livingSegment.Item2 - lineSegment.Item1));
-                return newPoints.ToArray();
             }
             else if (livingSegment.Item1 > lineSegment.Item1)
             {
@@ -431,7 +449,11 @@ public class SlimeMoldBranch : Line2D
                     lineSegment.Item1, lineSegment.Item2, livingSegment.Item1, livingSegment.Item2));
             }
         }
-        return newPoints.ToArray();
+        if (result.Count < livingSegments.Count)
+        {
+            result.Add(newPoints.ToArray());
+        }
+        return result;
     }
 
     private static bool lineIsInRectangle(Vector2 firstPoint, Vector2 secondPoint, Rect2 rectangle)
