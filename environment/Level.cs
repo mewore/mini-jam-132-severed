@@ -16,6 +16,10 @@ public class Level : Node2D
         if (Engine.EditorHint)
         {
             levelNumber = Global.GetLevelPathNumber(GetTree().EditedSceneRoot.Filename.ToString());
+            if (Global.CurrentLevel <= 0 && levelNumber > 0)
+            {
+                Global.CurrentLevel = levelNumber;
+            }
         }
     }
 

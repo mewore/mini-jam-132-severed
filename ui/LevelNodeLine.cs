@@ -15,6 +15,10 @@ public class LevelNodeLine : Line2D, Selectable
     private LevelNode to;
     public LevelNode To => to;
 
+    private Label scoreLabel;
+
+    private readonly Gradient gradient = new Gradient();
+
     public string ScenePath => Global.GetLevelScenePath(to.Level);
 
     public bool Hovered
@@ -35,12 +39,16 @@ public class LevelNodeLine : Line2D, Selectable
 
     public Color Color => from.LevelColor.LinearInterpolate(to.LevelColor, .5f);
 
+    public bool Selectable => Global.LevelHasBeenCleared(from.Level);
+
+    public int TargetLevel => to.Level;
+
     public override void _Ready()
     {
-        Gradient = new Gradient();
-        Gradient.Colors = new Color[] { new Color(), new Color() };
-        Gradient.Offsets = new float[] { 0f, 1f };
         Hovered = false;
+        gradient.Colors = new Color[] { new Color(), new Color() };
+        gradient.Offsets = new float[] { 0f, 1f };
+        scoreLabel = GetNode<Label>("ScoreLabel");
     }
 
     public override void _Process(float delta)
@@ -60,8 +68,28 @@ public class LevelNodeLine : Line2D, Selectable
             Vector2.Zero,
             targetNode.Position - previousNode.Position
         };
-        Gradient.Colors = new Color[] { previousNode.LevelColor, targetNode.LevelColor };
+        gradient.Colors = new Color[] { previousNode.LevelColor, targetNode.LevelColor };
         Visible = true;
+        if (Selectable)
+        {
+            Gradient = gradient;
+            scoreLabel.RectPosition = (Points[0] + Points[1] - scoreLabel.RectSize) * .5f;
+        }
+        else
+        {
+            Gradient = null;
+            DefaultColor = new Color(.3f, .3f, .3f);
+            Modulate = new Color(Modulate, .5f);
+        }
+        if (Global.LevelHasBeenCleared(to.Level))
+        {
+            scoreLabel.Visible = true;
+            scoreLabel.Text = Global.GetLevelScore(to.Level).ToString();
+        }
+        else
+        {
+            scoreLabel.Visible = false;
+        }
     }
 
     public void Deactivate()

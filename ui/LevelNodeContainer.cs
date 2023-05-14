@@ -7,6 +7,9 @@ public class LevelNodeContainer : Node2D
     [Signal]
     public delegate void Refreshed();
 
+    [Export]
+    private PackedScene levelNodeLineScene = null;
+
     private readonly List<LevelNode> nodes = new List<LevelNode>();
     private Dictionary<int, LevelNode> nodeByLevel = new Dictionary<int, LevelNode>();
     public IReadOnlyCollection<LevelNode> Nodes => nodeByLevel.Values;
@@ -19,6 +22,8 @@ public class LevelNodeContainer : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Global.LoadGameData();
+        Global.SaveGameData();
         foreach (Node node in GetChildren())
         {
             if (node is LevelNode)
@@ -78,7 +83,7 @@ public class LevelNodeContainer : Node2D
             }
             while (lines.Count <= activeLineCount)
             {
-                LevelNodeLine newLine = new LevelNodeLine();
+                LevelNodeLine newLine = levelNodeLineScene.Instance<LevelNodeLine>();
                 lines.Add(newLine);
                 lineContainer.AddChild(newLine);
             }

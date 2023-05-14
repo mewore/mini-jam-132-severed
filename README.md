@@ -35,10 +35,9 @@
 
 - [ ] 💙 Optimize the molds more - do not update all segment lines when only the growing one has changed
 - [x] 💙 The slime mold destroyed parts flash red before disappearing
-- [ ] 💙 Make it easier for lines to hit the mold (i.e., take the width of the lines into account)
 - [x] 💚 Areas and levels based on them
   ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)
-- [ ] 💙 Lock levels that haven't been reached yet
+- [x] 💙 Lock levels that haven't been reached yet
 - [ ] 💙 Pause menu
 - [ ] 💙 Auto-saving and auto-loading
 - [ ] 💙 Show the best scores of levels
@@ -58,7 +57,8 @@
 
 ### Advanced features
 
-- [ ] 💙 The slime molds gradually become gray-ish as they become inactive
+- [ ] 💙 Show warnings for slime molds that are about to spawn
+- [ ] 💙 Show the user if they have tried to make an obstacle too soon (red flashing text, camera shake, etc.)
 - [ ] 💙 Show the level background at the end of the level
 - [ ] 💙 Nice transitions
 - [ ] 💙 Ability to view backgrounds
@@ -67,6 +67,8 @@
 
 ### Expert features
 
+- [ ] 💙 The slime molds gradually become gray-ish as they become inactive?
+- [ ] 💙 Make it easier for lines to hit the mold (i.e., take the width of the lines into account)
 - [ ] 💙 Optional non-mouse inputs (instead, having to move the cursor)
 - [ ] 💜 Scientist sprite
 - [ ] 💙💚 Monologue

@@ -9,4 +9,8 @@ public interface Selectable
     Color Color { get; }
 
     bool Hovered { set; }
+
+    bool Selectable { get; }
+
+    int TargetLevel { get; }
 }

@@ -83,7 +83,6 @@ public class SlimeMoldBranch : Line2D
 
     private bool isDamaged = false;
     private bool segmentLinesNeedUpdate = false;
-    private bool needsUpdateAfterGrowth = false;
     private readonly SegmentCollection explosions = new SegmentCollection();
 
     private Rect2 precalculatedBoundingRect;

@@ -142,7 +142,7 @@ public class Game : Node2D
         }
         if (oldAnalyzedSquares < analyzedSquares)
         {
-            scoreLabel.Text = scoreTemplate.Replace("<SCORE>", Mathf.RoundToInt((float)successfulPixels * 100f / analyzedPixels).ToString());
+            scoreLabel.Text = scoreTemplate.Replace("<SCORE>", getScore().ToString());
             scoreLabel.Visible = true;
         }
     }
@@ -268,9 +268,15 @@ public class Game : Node2D
     {
         if (animationName == "end_game")
         {
+            Global.TryWinLevel(getScore());
             analysisProgress = 1f;
             GetNode<AnimationPlayer>("AnimationPlayer").PlaybackSpeed = 1f;
             GetNode<AnimationPlayer>("AnimationPlayer").Play("exit_prompt");
         }
+    }
+
+    private int getScore()
+    {
+        return Mathf.RoundToInt((float)successfulPixels * 100f / analyzedPixels);
     }
 }

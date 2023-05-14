@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://ui/title-theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/Title.cs" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://ui/white.png" type="Texture" id=6]
 [ext_resource path="res://ui/LevelNodeContainer.tscn" type="PackedScene" id=7]
 [ext_resource path="res://ui/LevelNode.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ui/LevelNodeLine.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
@@ -123,16 +124,11 @@ alignment = 2
 
 [node name="LevelNodes" parent="." instance=ExtResource( 7 )]
 position = Vector2( 512, 152 )
+levelNodeLineScene = ExtResource( 9 )
 
 [node name="StartingPoint" parent="LevelNodes" instance=ExtResource( 8 )]
 modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
 position = Vector2( 0, -8 )
-levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
-
-[node name="LevelNode1" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
-position = Vector2( 0, 72 )
-level = 1
 levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
 
 [node name="LevelNode2" parent="LevelNodes" instance=ExtResource( 8 )]
@@ -140,6 +136,12 @@ modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
 position = Vector2( -56, 152 )
 level = 2
 previousLevel = 1
+levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
+
+[node name="LevelNode1" parent="LevelNodes" instance=ExtResource( 8 )]
+modulate = Color( 0.682353, 0.666667, 0.639216, 1 )
+position = Vector2( 0, 72 )
+level = 1
 levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
 
 [node name="LevelNode3" parent="LevelNodes" instance=ExtResource( 8 )]

@@ -60,6 +60,7 @@ public class MainMenu : VBoxContainer
         if (@event.IsActionPressed("ui_navigate") && hoveredNode != null)
         {
             GD.Print("Navigating to: " + hoveredNode.ScenePath);
+            Global.CurrentLevel = hoveredNode.TargetLevel;
             GetTree().ChangeScene(hoveredNode.ScenePath);
         }
     }
@@ -71,11 +72,14 @@ public class MainMenu : VBoxContainer
         Selectable result = null;
         foreach (LevelNodeLine line in lines)
         {
-            float distanceSquared = (line.GlobalPosition + (line.Points[0] + line.Points[1]) / 2).DistanceSquaredTo(position);
-            if (distanceSquared < bestDistanceSquared)
+            if (line.Selectable)
             {
-                result = line;
-                bestDistanceSquared = distanceSquared;
+                float distanceSquared = (line.GlobalPosition + (line.Points[0] + line.Points[1]) / 2).DistanceSquaredTo(position);
+                if (distanceSquared < bestDistanceSquared)
+                {
+                    result = line;
+                    bestDistanceSquared = distanceSquared;
+                }
             }
         }
         return result;

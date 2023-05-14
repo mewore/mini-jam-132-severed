@@ -50,7 +50,7 @@ public class SkillState
 
 public class Global : Node
 {
-    public const int INFINITE_TELEPORTS = 1 << 30;
+    private const int DEFAULT_SCORE = -1;
 
     private const string SAVE_DIRECTORY = "user://";
     private const string SAVE_FILE_PREFIX = "save-";
@@ -61,7 +61,6 @@ public class Global : Node
 
     private const string GAME_DATA_FILE = "gamedata";
     private const string SCORES_KEY = "scores";
-    private const string LEVELS_CLEARED_KEY = "levelsCleared";
 
     private const string MASTER_VOLUME_KEY = "masterVolume";
     private const string SFX_VOLUME_KEY = "sfxVolume";
@@ -70,13 +69,11 @@ public class Global : Node
 
     private static List<int> bestScores = new List<int>();
 
-    private const int FIRST_LEVEL = 1;
-    private static int currentLevel = 1;
+    private const int NO_LEVEL = 0;
+    private static int currentLevel = NO_LEVEL;
     public static int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 
     public static string CurrentLevelPath { get => GetLevelScenePath(currentLevel); }
-
-    private static int levelsCleared = FIRST_LEVEL;
 
     private static GameSettings settings;
     public static GameSettings Settings { get => settings; }
@@ -97,11 +94,22 @@ public class Global : Node
     {
         while (bestScores.Count < currentLevel)
         {
-            bestScores.Add(INFINITE_TELEPORTS);
+            bestScores.Add(DEFAULT_SCORE);
         }
-        bestScores[currentLevel - 1] = Mathf.Min(bestScores[currentLevel - 1], score);
+        bestScores[currentLevel - 1] = Mathf.Max(bestScores[currentLevel - 1], score);
         SaveGameData();
-        return TryGoToLevel(currentLevel + 1);
+        // return TryGoToLevel(currentLevel + 1);
+        return true;
+    }
+
+    public static bool LevelHasBeenCleared(int level)
+    {
+        return level == 0 || (level <= bestScores.Count && bestScores[level - 1] > DEFAULT_SCORE);
+    }
+
+    public static int GetLevelScore(int level)
+    {
+        return level == 0 || level > bestScores.Count ? DEFAULT_SCORE : bestScores[level - 1];
     }
 
     public static int GetLastLevel()
@@ -114,26 +122,11 @@ public class Global : Node
         return lastLevel;
     }
 
-    public static int GetLevelBestTeleports(int level)
-    {
-        if (level > bestScores.Count)
-        {
-            return INFINITE_TELEPORTS;
-        }
-        return bestScores[level - 1];
-    }
-
     public static bool TryGoToLevel(int targetLevel)
     {
-        string targetLevelPath = GetLevelScenePath(targetLevel);
-        if (new File().FileExists(targetLevelPath))
+        if (LevelExists(targetLevel))
         {
             currentLevel = targetLevel;
-            if (targetLevel > levelsCleared)
-            {
-                levelsCleared = targetLevel;
-                SaveGameData();
-            }
             return true;
         }
         return false;
@@ -155,7 +148,6 @@ public class Global : Node
     public static void SaveGameData()
     {
         var data = new Dictionary<string, object>();
-        data.Add(LEVELS_CLEARED_KEY, levelsCleared);
         data.Add(SCORES_KEY, bestScores);
         SaveData(GAME_DATA_FILE, data);
     }
@@ -167,15 +159,10 @@ public class Global : Node
         {
             return false;
         }
-        levelsCleared = data.Contains(LEVELS_CLEARED_KEY) ? Convert.ToInt32(data[LEVELS_CLEARED_KEY]) : 0;
         object rawBestScores = data.Contains(SCORES_KEY) ? data[SCORES_KEY] : null;
         bestScores = rawBestScores == null
-            ? new List<int>(levelsCleared)
+            ? new List<int>()
             : godotArrayToIntList((Godot.Collections.Array)rawBestScores);
-        while (bestScores.Count < levelsCleared)
-        {
-            bestScores.Add(INFINITE_TELEPORTS);
-        }
         return true;
     }
 
