@@ -28,7 +28,7 @@ public class Game : Node2D
     private Gradient obstacleColourGradient = null;
 
     [Export]
-    private int calculationResolution = 8;
+    private int calculationResolution = 2;
 
     private SlimeMold mold;
 
@@ -111,10 +111,12 @@ public class Game : Node2D
             Rect2 square = calculationOverlay.GetNextSquare();
             int currentSuccessfulPixels = 0;
             int currentPixels = 0;
-            currentPixels++;
-            if (mold.Contains(square.Position + square.Size * .5f))
+            var currentResolution = calculationResolution;
+            if (pointIsInShapes(square.Position) || pointIsInShapes(square.Position + square.Size)
+                || pointIsInShapes(new Vector2(square.Position.x, square.Position.y + square.Size.y))
+                || pointIsInShapes(new Vector2(square.Position.x + square.Size.x, square.Position.y)))
             {
-                currentSuccessfulPixels++;
+                currentResolution *= 4;
             }
             Vector2 step = square.Size / Mathf.Max(calculationResolution - 1, 1);
             Vector2 firstPosition = square.Position + step / 2;
@@ -198,6 +200,10 @@ public class Game : Node2D
                         EmitSignal(nameof(GameOver));
                         break;
                 }
+            }
+            else if (@event.IsActionPressed("restart"))
+            {
+                GetTree().ReloadCurrentScene();
             }
             return;
         }

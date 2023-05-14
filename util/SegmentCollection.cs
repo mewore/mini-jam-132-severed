@@ -27,7 +27,6 @@ public class SegmentCollection
     {
         foreach (var segment in toAdd)
         {
-            Godot.GD.Print("Adding: (", segment.Item1, " -:- ", segment.Item2, ")");
             segments.Add(segment);
         }
         merge(segments);
@@ -103,10 +102,6 @@ public class SegmentCollection
                 throw new System.Exception(System.String.Format("({0} -:- {1}) \\ ({2} -:- {3})",
                     segment.Item1, segment.Item2, toRemove.Item1, toRemove.Item2));
             }
-        }
-        foreach (var segment in removed)
-        {
-            Godot.GD.Print("Removed: (", segment.Item1, " -:- ", segment.Item2, ")");
         }
         segments = newSegments;
         return removed;

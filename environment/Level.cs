@@ -31,7 +31,7 @@ public class Level : Node2D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionPressed("restart"))
+        if (@event.IsActionPressed("force_restart"))
         {
             _on_RestartButton_pressed();
         }
