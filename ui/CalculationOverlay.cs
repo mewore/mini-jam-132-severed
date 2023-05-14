@@ -50,7 +50,6 @@ public class CalculationOverlay : Node2D
     {
         rowSize = Mathf.CeilToInt((float)VIEWPORT_HEIGHT / squareSize);
         columnSize = Mathf.CeilToInt((float)VIEWPORT_WIDTH / squareSize);
-        GetViewport().RenderTargetClearMode = Viewport.ClearMode.Always;
     }
 
     public override void _Draw()

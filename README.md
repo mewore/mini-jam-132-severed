@@ -24,8 +24,9 @@
 - [x] 💙 The line creation is cancelled if the maximum line success is no matter at which point the [LINE] button is released
 - [x] 💙 When a line is created onto a slime mold, the slime mold is cut and disintegrates partially
 - [x] 💙 When the level ends, the lines fade out and the mold is enlarged
-- [ ] 💙 Shapes
-- [ ] 💙 At the end of the level, the score is displayed (based on how much of the shapes are covered)
+- [x] 💙 Shapes
+- [x] 💙 At the end of the level, the score is displayed (based on how much of the shapes are covered)
+- [ ] 💙 Optimize the molds
 - [ ] 💙 Lines decay and when they reach a size of 0, they disappear
 - [ ] 💟 Publish `0.1.0`
 

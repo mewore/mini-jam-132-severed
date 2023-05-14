@@ -73,6 +73,8 @@ public class Game : Node2D
 
     private float now = 0f;
 
+    Vector2[][] shapes;
+
     public override void _Ready()
     {
         timerLine = GetNode<Node2D>("TimerLine");
@@ -86,6 +88,13 @@ public class Game : Node2D
         calculationOverlay = GetNode<CalculationOverlay>("CalculationOverlay");
         scoreLabel = GetNode<Label>("CanvasLayer/ScoreLabel");
         scoreTemplate = scoreLabel.Text;
+
+        var polygonNodes = GetNode("Shapes").GetChildren();
+        shapes = new Vector2[polygonNodes.Count][];
+        for (int index = 0; index < polygonNodes.Count; index++)
+        {
+            shapes[index] = (polygonNodes[index] as Polygon2D).Polygon;
+        }
     }
 
     private void updateAnalysisProgress()
@@ -112,7 +121,8 @@ public class Game : Node2D
                 for (int col = 0; col < calculationResolution; col++, x += step.x)
                 {
                     currentPixels++;
-                    if (mold.Contains(new Vector2(x, y)))
+                    var point = new Vector2(x, y);
+                    if (pointIsInShapes(point) == mold.Contains(point))
                     {
                         currentSuccessfulPixels++;
                     }
@@ -129,6 +139,18 @@ public class Game : Node2D
             scoreLabel.Text = scoreTemplate.Replace("<SCORE>", Mathf.RoundToInt((float)successfulPixels * 100f / analyzedPixels).ToString());
             scoreLabel.Visible = true;
         }
+    }
+
+    private bool pointIsInShapes(Vector2 point)
+    {
+        foreach (var shape in shapes)
+        {
+            if (Geometry.IsPointInPolygon(point, shape))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public override void _Process(float delta)
