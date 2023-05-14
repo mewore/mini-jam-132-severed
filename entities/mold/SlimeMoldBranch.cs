@@ -37,6 +37,7 @@ public class SlimeMoldBranch : Line2D
     private int widthDecrement = 2;
 
     private float initialWidth;
+    private float widthMultiplier = 1f;
 
     [Export]
     private float beatWidthMultiplier = 1.5f;
@@ -50,16 +51,13 @@ public class SlimeMoldBranch : Line2D
     [Export(PropertyHint.Range, "0,1")]
     private float speedDecay = 0.1f;
 
-    private float aliveFrom = 0f;
-    private float aliveTo = 1f;
-
     [Export]
     private float vulnerability = 50f;
 
     private bool active = true;
+    private bool frozen = false;
 
     private Vector2 targetPoint;
-    private Vector2 initialVelocity;
     private Vector2 velocity;
     private Vector2 realVelocity;
 
@@ -82,6 +80,8 @@ public class SlimeMoldBranch : Line2D
 
     private bool isDamaged = false;
     private readonly SegmentCollection explosions = new SegmentCollection();
+
+    private Rect2 precalculatedBoundingRect;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -113,6 +113,10 @@ public class SlimeMoldBranch : Line2D
 
     public override void _Process(float delta)
     {
+        if (frozen)
+        {
+            return;
+        }
         if (Width != initialWidth)
         {
             Width = Mathf.Lerp(Width, initialWidth, widthDecay);
@@ -239,14 +243,8 @@ public class SlimeMoldBranch : Line2D
         GD.Print("TestIntersection 1");
         firstPoint = ToLocal(firstPoint);
         secondPoint = ToLocal(secondPoint);
-        Vector2 minPoint = Points[0];
-        Vector2 maxPoint = Points[0];
-        for (int index = 1; index < Points.Length; index++)
-        {
-            minPoint = new Vector2(Mathf.Min(minPoint.x, Points[index].x), Mathf.Min(minPoint.y, Points[index].y));
-            maxPoint = new Vector2(Mathf.Max(maxPoint.x, Points[index].x), Mathf.Max(maxPoint.y, Points[index].y));
-        }
-        if (!lineIsInRectangle(firstPoint, secondPoint, minPoint, maxPoint))
+
+        if (!lineIsInRectangle(firstPoint, secondPoint, getBoundingRectangle()))
         {
             return;
         }
@@ -359,6 +357,8 @@ public class SlimeMoldBranch : Line2D
             line.Width = Width;
             line.DefaultColor = DefaultColor;
             line.JointMode = LineJointMode.Bevel;
+            line.BeginCapMode = LineCapMode.Round;
+            line.EndCapMode = LineCapMode.Round;
             AddChild(line);
             segmentLines.Add(line);
         }
@@ -372,8 +372,9 @@ public class SlimeMoldBranch : Line2D
             segmentLines[index].Visible = true;
             segmentLines[index].Width = Width;
             (float, float) segment = livingSegments.Segments[index];
-            segmentLines[index].BeginCapMode = segment.Item1 < Mathf.Epsilon ? LineCapMode.Round : LineCapMode.None;
-            segmentLines[index].EndCapMode = segment.Item2 == Mathf.Inf ? LineCapMode.Round : LineCapMode.None;
+            // On second thought, I don't want this (it makes it harder to calculate coverage at the end of the level)
+            // segmentLines[index].BeginCapMode = segment.Item1 < Mathf.Epsilon ? LineCapMode.Round : LineCapMode.None;
+            // segmentLines[index].EndCapMode = segment.Item2 == Mathf.Inf ? LineCapMode.Round : LineCapMode.None;
             segmentLines[index].Points = getPointsForSegment(segment);
         }
     }
@@ -433,16 +434,161 @@ public class SlimeMoldBranch : Line2D
         return newPoints.ToArray();
     }
 
-    private static bool lineIsInRectangle(Vector2 firstPoint, Vector2 secondPoint, Vector2 topLeft, Vector2 bottomRight)
+    private static bool lineIsInRectangle(Vector2 firstPoint, Vector2 secondPoint, Rect2 rectangle)
     {
-        var rectangle = new Rect2(topLeft, bottomRight - topLeft);
-        Vector2 bottomLeft = new Vector2(topLeft.x, bottomRight.y);
-        Vector2 topRight = new Vector2(bottomRight.x, topLeft.y);
+        var topLeft = rectangle.Position;
+        var bottomRight = topLeft + rectangle.Size;
+        var bottomLeft = new Vector2(topLeft.x, bottomRight.y);
+        var topRight = new Vector2(bottomRight.x, topLeft.y);
         return rectangle.HasPoint(firstPoint)
             || rectangle.HasPoint(secondPoint)
             || Geometry.SegmentIntersectsSegment2d(firstPoint, secondPoint, topLeft, topRight) != null
             || Geometry.SegmentIntersectsSegment2d(firstPoint, secondPoint, topRight, bottomRight) != null
             || Geometry.SegmentIntersectsSegment2d(firstPoint, secondPoint, bottomRight, bottomLeft) != null
             || Geometry.SegmentIntersectsSegment2d(firstPoint, secondPoint, bottomLeft, topLeft) != null;
+    }
+
+    public void Disable()
+    {
+        precalculatedBoundingRect = getBoundingRectangle();
+        active = false;
+        frozen = true;
+        GetNode<Timer>("BranchTimer").Stop();
+        foreach (var child in children)
+        {
+            child.Disable();
+        }
+    }
+
+    public void SetWidthMultiplier(float widthMultiplier)
+    {
+        this.widthMultiplier = widthMultiplier;
+        Width = Mathf.Max(Width, initialWidth * widthMultiplier);
+        foreach (var line in segmentLines)
+        {
+            line.Width = Width;
+        }
+        foreach (var child in children)
+        {
+            child.SetWidthMultiplier(widthMultiplier);
+        }
+    }
+
+    public bool Contains(Vector2 point)
+    {
+        foreach (var child in children)
+        {
+            if (child.Contains(point))
+            {
+                return true;
+            }
+        }
+        int livingSegmentIndex = 0;
+        (float, float) livingSegment = (0f, Mathf.Inf);
+        if (isDamaged)
+        {
+            if (livingSegments.Count <= 0)
+            {
+                return false;
+            }
+            livingSegment = livingSegments.Segments[0];
+        }
+
+        point = ToLocal(point);
+        var boundingRect = getBoundingRectangle();
+        var padding = new Vector2(Width, Width);
+        boundingRect = boundingRect.Expand(boundingRect.Position - padding);
+        boundingRect = boundingRect.Expand(boundingRect.Position + boundingRect.Size + padding);
+        if (!boundingRect.HasPoint(point))
+        {
+            return false;
+        }
+        (float, float) lineSegment = (0f, 0f);
+        for (int index = 1; index < Points.Length; index++)
+        {
+            var pointDifference = Points[index] - Points[index - 1];
+            var length = pointDifference.Length();
+            var lineDirection = pointDifference / length;
+            lineSegment = (lineSegment.Item2, lineSegment.Item2 + length);
+            while (livingSegment.Item2 < lineSegment.Item1)
+            {
+                livingSegmentIndex++;
+                if (livingSegmentIndex >= livingSegments.Count)
+                {
+                    return false;
+                }
+                livingSegment = livingSegments.Segments[livingSegmentIndex];
+            }
+            if (lineSegment.Item2 < livingSegment.Item1)
+            {
+                continue;
+            }
+            else if (lineSegment.Item1 >= livingSegment.Item1 && lineSegment.Item2 <= livingSegment.Item2)
+            {
+                // lineSegment in livingSegment
+                if (pointIsInSegment(point, Points[index - 1], Points[index]))
+                {
+                    return true;
+                }
+            }
+            else if (livingSegment.Item1 >= lineSegment.Item1 && livingSegment.Item2 <= lineSegment.Item2)
+            {
+                // livingSegment in lineSegment
+                if (pointIsInSegment(point,
+                    Points[index - 1] + lineDirection * (livingSegment.Item1 - lineSegment.Item1),
+                    Points[index - 1] + lineDirection * (livingSegment.Item2 - lineSegment.Item1)))
+                {
+                    return true;
+                }
+            }
+            else if (livingSegment.Item2 < lineSegment.Item2)
+            {
+                // livingSegment to the left of lineSegment
+                if (pointIsInSegment(point,
+                    Points[index - 1],
+                    Points[index - 1] + lineDirection * (livingSegment.Item2 - lineSegment.Item1)))
+                {
+                    return true;
+                }
+            }
+            else if (livingSegment.Item1 > lineSegment.Item1)
+            {
+                // livingSegment to the right of lineSegment
+                if (pointIsInSegment(point,
+                    Points[index - 1] + lineDirection * (livingSegment.Item1 - lineSegment.Item1),
+                    Points[index]))
+                {
+                    return true;
+                }
+            }
+            else if (OS.IsDebugBuild())
+            {
+                throw new System.Exception(System.String.Format("({0} -:- {1}) \\ ({2} -:- {1})",
+                    lineSegment.Item1, lineSegment.Item2, livingSegment.Item1, livingSegment.Item2));
+            }
+        }
+        return false;
+    }
+
+    private bool pointIsInSegment(Vector2 point, Vector2 segmentFirst, Vector2 segmentSecond)
+    {
+        var closestPoint = Geometry.GetClosestPointToSegment2d(point, segmentFirst, segmentSecond);
+        return closestPoint.DistanceSquaredTo(point) <= Width * Width / 4;
+    }
+
+    private Rect2 getBoundingRectangle()
+    {
+        if (frozen)
+        {
+            return precalculatedBoundingRect;
+        }
+        Vector2 minPoint = Points[0];
+        Vector2 maxPoint = Points[0];
+        for (int index = 1; index < Points.Length; index++)
+        {
+            minPoint = new Vector2(Mathf.Min(minPoint.x, Points[index].x), Mathf.Min(minPoint.y, Points[index].y));
+            maxPoint = new Vector2(Mathf.Max(maxPoint.x, Points[index].x), Mathf.Max(maxPoint.y, Points[index].y));
+        }
+        return new Rect2(minPoint, maxPoint - minPoint);
     }
 }

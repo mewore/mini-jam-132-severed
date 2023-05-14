@@ -3,12 +3,15 @@ using System;
 
 public class Game : Node2D
 {
+    [Signal]
+    public delegate void GameOver();
+
     private Node2D timerLine;
     private Timer levelTimer;
     private Timer beatTimer;
 
     [Export]
-    private PackedScene obstacleScene;
+    private PackedScene obstacleScene = null;
 
     private Node obstacleContainer;
     private Obstacle obstacleBeingCreated;
@@ -19,10 +22,54 @@ public class Game : Node2D
     private float obstacleSuccessLostPerBeat = .25f;
 
     [Export]
-    private Curve obstacleSuccessByCloseness;
+    private Curve obstacleSuccessByCloseness = null;
 
     [Export]
-    private Gradient obstacleColourGradient;
+    private Gradient obstacleColourGradient = null;
+
+    [Export]
+    private int calculationResolution = 8;
+
+    private SlimeMold mold;
+
+    private CalculationOverlay calculationOverlay;
+    private int analyzedSquares = 0;
+    private int analyzedPixels = 0;
+    private int successfulPixels = 0;
+
+    private float _analysisProgress = 0f;
+    [Export(PropertyHint.Range, "0,1")]
+    private float analysisProgress
+    {
+        get => _analysisProgress; set
+        {
+            _analysisProgress = value;
+            updateAnalysisProgress();
+        }
+    }
+
+    private bool _active = true;
+
+    [Export]
+    private bool active
+    {
+        get => _active;
+        set
+        {
+            _active = value;
+            if (!value)
+            {
+                if (obstacleBeingCreated != null)
+                {
+                    obstacleBeingCreated.Place(0f);
+                    obstacleBeingCreated = null;
+                }
+            }
+        }
+    }
+
+    private string scoreTemplate;
+    private Label scoreLabel;
 
     private float now = 0f;
 
@@ -33,11 +80,63 @@ public class Game : Node2D
         beatTimer = GetNode<Timer>("BeatTimer");
 
         obstacleContainer = GetNode("Lines");
+
+        mold = GetNode<SlimeMold>("SlimeMold");
+
+        calculationOverlay = GetNode<CalculationOverlay>("CalculationOverlay");
+        scoreLabel = GetNode<Label>("CanvasLayer/ScoreLabel");
+        scoreTemplate = scoreLabel.Text;
+    }
+
+    private void updateAnalysisProgress()
+    {
+        // No idea why I need to add one to this
+        int targetAnalysis = Mathf.RoundToInt(_analysisProgress * calculationOverlay.SquareCount) + 1;
+        var oldAnalyzedSquares = analyzedSquares;
+        while (analyzedSquares < targetAnalysis)
+        {
+            Rect2 square = calculationOverlay.GetNextSquare();
+            int currentSuccessfulPixels = 0;
+            int currentPixels = 0;
+            currentPixels++;
+            if (mold.Contains(square.Position + square.Size * .5f))
+            {
+                currentSuccessfulPixels++;
+            }
+            Vector2 step = square.Size / Mathf.Max(calculationResolution - 1, 1);
+            Vector2 firstPosition = square.Position + step / 2;
+            float y = firstPosition.y;
+            for (int row = 0; row < calculationResolution; row++, y += step.y)
+            {
+                float x = firstPosition.x;
+                for (int col = 0; col < calculationResolution; col++, x += step.x)
+                {
+                    currentPixels++;
+                    if (mold.Contains(new Vector2(x, y)))
+                    {
+                        currentSuccessfulPixels++;
+                    }
+                }
+            }
+
+            calculationOverlay.SquareDone(square, (float)currentSuccessfulPixels / currentPixels);
+            successfulPixels += currentSuccessfulPixels;
+            analyzedPixels += currentPixels;
+            analyzedSquares++;
+        }
+        if (oldAnalyzedSquares < analyzedSquares)
+        {
+            scoreLabel.Text = scoreTemplate.Replace("<SCORE>", Mathf.RoundToInt((float)successfulPixels * 100f / analyzedPixels).ToString());
+            scoreLabel.Visible = true;
+        }
     }
 
     public override void _Process(float delta)
     {
-        timerLine.Scale = new Vector2(1f - levelTimer.TimeLeft / levelTimer.WaitTime, timerLine.Scale.y);
+        if (!levelTimer.IsStopped())
+        {
+            timerLine.Scale = new Vector2(1f - levelTimer.TimeLeft / levelTimer.WaitTime, timerLine.Scale.y);
+        }
         if (obstacleBeingCreated != null)
         {
             obstacleBeingCreated.Success = getLineSuccess(getCosmeticClosenessToBeat());
@@ -47,6 +146,10 @@ public class Game : Node2D
     public override void _PhysicsProcess(float delta)
     {
         now += delta;
+        if (!_active)
+        {
+            return;
+        }
         if (obstacleBeingCreated != null && getLineSuccess(1f) <= Mathf.Epsilon)
         {
             obstacleBeingCreated.Place(0f);
@@ -56,6 +159,22 @@ public class Game : Node2D
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (!_active)
+        {
+            if (@event.IsActionPressed("create_line"))
+            {
+                switch (GetNode<AnimationPlayer>("AnimationPlayer").CurrentAnimation)
+                {
+                    case "end_game":
+                        GetNode<AnimationPlayer>("AnimationPlayer").PlaybackSpeed = 4f;
+                        break;
+                    case "exit_prompt":
+                        EmitSignal(nameof(GameOver));
+                        break;
+                }
+            }
+            return;
+        }
         if (@event.IsActionPressed("create_line") && obstacleBeingCreated == null && obstacleScene != null)
         {
             obstacleBeingCreated = obstacleScene.Instance<Obstacle>();
@@ -97,5 +216,20 @@ public class Game : Node2D
     {
         float closenessToBeat = Mathf.Max(beatTimer.TimeLeft / beatTimer.WaitTime - .5f, 0f) * 2f;
         return obstacleSuccessByCloseness.InterpolateBaked(closenessToBeat);
+    }
+
+    public void _on_LevelTimer_timeout()
+    {
+        GetNode<AnimationPlayer>("AnimationPlayer").Play("end_game");
+    }
+
+    public void _on_AnimationPlayer_animation_finished(string animationName)
+    {
+        if (animationName == "end_game")
+        {
+            analysisProgress = 1f;
+            GetNode<AnimationPlayer>("AnimationPlayer").PlaybackSpeed = 1f;
+            GetNode<AnimationPlayer>("AnimationPlayer").Play("exit_prompt");
+        }
     }
 }

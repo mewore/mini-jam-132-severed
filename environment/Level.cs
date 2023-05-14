@@ -37,12 +37,7 @@ public class Level : Node2D
         }
     }
 
-    public void _on_Game_GameWon()
-    {
-        GetTree().ChangeSceneTo(mainMenuScene);
-    }
-
-    public void _on_LevelTimer_timeout()
+    public void _on_Game_GameOver()
     {
         GetTree().ChangeSceneTo(mainMenuScene);
     }
