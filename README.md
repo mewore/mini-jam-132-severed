@@ -29,12 +29,12 @@
 - [x] 💙 Optimize the molds
 - [x] 💙 Lines decay and when they reach a size of 0, they disappear
 - [x] 💙 Do not allow lines to be created too quickly
-- [ ] 💟 Publish `0.1.0`
+- [x] 💟 Publish `0.1.0`
 
 ### Basic features
 
 - [ ] 💙 Optimize the molds more - do not update all segment lines when only the growing one has changed
-- [ ] 💙 The slime mold destroyed parts flash red before disappearing
+- [x] 💙 The slime mold destroyed parts flash red before disappearing
 - [ ] 💙 Make it easier for lines to hit the mold (i.e., take the width of the lines into account)
 - [x] 💚 Areas and levels based on them
   ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)

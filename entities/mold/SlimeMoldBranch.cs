@@ -8,6 +8,9 @@ public class SlimeMoldBranch : Line2D
     private string slimeMoldBranchScene = "res://entities/mold/SlimeMoldBranch.tscn";
 
     [Export]
+    private PackedScene damageLineScene = null;
+
+    [Export]
     private float branchTimeMin = 1f;
 
     [Export]
@@ -139,9 +142,20 @@ public class SlimeMoldBranch : Line2D
                 active = false;
                 GetNode<Timer>("BranchTimer").Stop();
             }
-            foreach (var segment in explosions.Segments)
+            foreach (var explosion in explosions.Segments)
             {
-                livingSegments.Remove(segment);
+                livingSegments.Remove(explosion);
+            }
+            if (damageLineScene != null)
+            {
+                foreach (Vector2[] points in getPointsForSegments(explosions))
+                {
+                    Line2D damageLine = damageLineScene.Instance<Line2D>();
+                    damageLine.Position = Position;
+                    damageLine.Width = Width;
+                    damageLine.Points = points;
+                    GetParent().AddChild(damageLine);
+                }
             }
             explosions.Clear();
             segmentLinesNeedUpdate = true;
@@ -372,7 +386,7 @@ public class SlimeMoldBranch : Line2D
             AddChild(line);
             segmentLines.Add(line);
         }
-        List<Vector2[]> pointsForSegments = getPointsForSegment();
+        List<Vector2[]> pointsForSegments = getPointsForSegments(livingSegments);
         for (int index = 0; index < segmentLines.Count; index++)
         {
             if (index >= pointsForSegments.Count)
@@ -389,11 +403,11 @@ public class SlimeMoldBranch : Line2D
         }
     }
 
-    private List<Vector2[]> getPointsForSegment()
+    private List<Vector2[]> getPointsForSegments(SegmentCollection segments)
     {
         var result = new List<Vector2[]>();
-        int livingSegmentIndex = 0;
-        (float, float) livingSegment = livingSegments.Segments[0];
+        int segmentIndex = 0;
+        (float, float) livingSegment = segments.Segments[0];
 
         (float, float) lineSegment = (0f, 0f);
         var newPoints = new List<Vector2>();
@@ -405,14 +419,14 @@ public class SlimeMoldBranch : Line2D
             lineSegment = (lineSegment.Item2, lineSegment.Item2 + length);
             while (livingSegment.Item2 < lineSegment.Item1)
             {
-                livingSegmentIndex++;
+                segmentIndex++;
                 result.Add(newPoints.ToArray());
                 newPoints.Clear();
-                if (livingSegmentIndex >= livingSegments.Count)
+                if (segmentIndex >= segments.Count)
                 {
                     return result;
                 }
-                livingSegment = livingSegments.Segments[livingSegmentIndex];
+                livingSegment = segments.Segments[segmentIndex];
             }
             if (lineSegment.Item2 < livingSegment.Item1 || lineSegment.Item1 > livingSegment.Item2)
             {
