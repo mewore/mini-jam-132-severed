@@ -211,13 +211,14 @@ public class Game : Node2D
         }
         else if (@event.IsActionReleased("create_line") && obstacleBeingCreated != null)
         {
-            obstacleBeingCreated.Place(getLineSuccess());
+            float success = getLineSuccess();
+            obstacleBeingCreated.Place(success);
             if (obstacleBeingCreated is ObstacleLine)
             {
                 var line = obstacleBeingCreated as ObstacleLine;
                 foreach (var moldBranch in GetNode<SlimeMold>("SlimeMold").Branches)
                 {
-                    moldBranch.TestIntersection(line.Points[0], line.Points[1]);
+                    moldBranch.TestIntersection(line.Points[0], line.Points[1], success);
                 }
             }
             obstacleBeingCreated = null;

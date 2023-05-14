@@ -3,6 +3,11 @@ using System;
 
 public class ObstacleLine : Line2D, Obstacle
 {
+    [Export]
+    private float maxLifetime = 10f;
+
+    private float lifeLeft;
+
     private float initialWidth;
 
     private Gradient colourGradient;
@@ -34,6 +39,19 @@ public class ObstacleLine : Line2D, Obstacle
         Points = new Vector2[] { Points[0], GetGlobalMousePosition() };
     }
 
+    public override void _PhysicsProcess(float delta)
+    {
+        if (!placed)
+        {
+            return;
+        }
+        if ((lifeLeft -= delta) < 0f)
+        {
+            QueueFree();
+        }
+        Modulate = new Color(Modulate, lifeLeft / maxLifetime);
+    }
+
     public void Place(float success)
     {
         if (success < Mathf.Epsilon)
@@ -43,6 +61,7 @@ public class ObstacleLine : Line2D, Obstacle
         }
         Points = new Vector2[] { Points[0], GetGlobalMousePosition() };
         Success = success;
+        lifeLeft = maxLifetime * success;
 
         var collisionShape = GetNode<CollisionShape2D>("Body/CollisionShape2D");
         collisionShape.Disabled = false;

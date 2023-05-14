@@ -52,7 +52,7 @@ public class SlimeMoldBranch : Line2D
     private float speedDecay = 0.1f;
 
     [Export]
-    private float vulnerability = 50f;
+    private float vulnerability = 200f;
 
     private bool active = true;
     private bool frozen = false;
@@ -146,6 +146,10 @@ public class SlimeMoldBranch : Line2D
             explosions.Clear();
             segmentLinesNeedUpdate = true;
             isDamaged = true;
+            if (livingSegments.Count <= 0)
+            {
+                QueueFree();
+            }
         }
         if (!active)
         {
@@ -165,10 +169,9 @@ public class SlimeMoldBranch : Line2D
         {
             velocity = realVelocity;
             currentPoints.Add(currentPoints[currentPoints.Count - 1]);
-            Points = currentPoints.ToArray();
         }
         currentPoints[currentPoints.Count - 1] += velocity * delta;
-        Points[Points.Length - 1] = currentPoints[Points.Length - 1];
+        Points = currentPoints.ToArray();
         if (isDamaged)
         {
             segmentLinesNeedUpdate = true;
@@ -242,11 +245,11 @@ public class SlimeMoldBranch : Line2D
         Width = initialWidth * beatWidthMultiplier;
     }
 
-    public void TestIntersection(Vector2 firstPoint, Vector2 secondPoint)
+    public void TestIntersection(Vector2 firstPoint, Vector2 secondPoint, float success)
     {
         foreach (var child in children)
         {
-            child.TestIntersection(firstPoint, secondPoint);
+            child.TestIntersection(firstPoint, secondPoint, success);
         }
         firstPoint = ToLocal(firstPoint);
         secondPoint = ToLocal(secondPoint);
@@ -255,6 +258,8 @@ public class SlimeMoldBranch : Line2D
         {
             return;
         }
+
+        var damage = vulnerability * success;
 
         var totalLength = getTotalLength();
 
@@ -273,7 +278,7 @@ public class SlimeMoldBranch : Line2D
             }
             Vector2 intersectionPoint = (Vector2)intersection;
             float intersectionPos = position - intersectionPoint.DistanceTo(Points[index]);
-            var potentialExplosion = livingSegments.GetExplosionAt(intersectionPos, vulnerability);
+            var potentialExplosion = livingSegments.GetExplosionAt(intersectionPos, damage);
             if (potentialExplosion == null)
             {
                 continue;
@@ -282,11 +287,11 @@ public class SlimeMoldBranch : Line2D
             explosions.Add(explosion);
             if (explosion.Item1 < Mathf.Epsilon)
             {
-                damageToParent = Mathf.Max(damageToParent, vulnerability - intersectionPos);
+                damageToParent = Mathf.Max(damageToParent, damage - intersectionPos);
             }
             if (explosion.Item2 > totalLength - Mathf.Epsilon)
             {
-                damageToChildren = Mathf.Max(damageToChildren, vulnerability - (totalLength - intersectionPos));
+                damageToChildren = Mathf.Max(damageToChildren, damage - (totalLength - intersectionPos));
             }
         }
 
