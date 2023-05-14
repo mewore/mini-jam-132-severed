@@ -157,25 +157,25 @@ previousLevel = 3
 levelColor = Color( 0.682353, 0.666667, 0.639216, 1 )
 
 [node name="LevelNode5" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
+modulate = Color( 0.215686, 0.956863, 0.905882, 1 )
 position = Vector2( -126, 18 )
 level = 5
 previousLevel = 2
-levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
+levelColor = Color( 0.215686, 0.956863, 0.905882, 1 )
 
 [node name="LevelNode6" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
+modulate = Color( 0.215686, 0.956863, 0.905882, 1 )
 position = Vector2( -198, 74 )
 level = 6
 previousLevel = 5
-levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
+levelColor = Color( 0.215686, 0.956863, 0.905882, 1 )
 
 [node name="LevelNode7" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
+modulate = Color( 0.215686, 0.956863, 0.905882, 1 )
 position = Vector2( -262, 18 )
 level = 7
 previousLevel = 6
-levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
+levelColor = Color( 0.215686, 0.956863, 0.905882, 1 )
 
 [node name="LevelNode8" parent="LevelNodes" instance=ExtResource( 8 )]
 modulate = Color( 0.3414, 0.773438, 0.560794, 1 )
@@ -199,53 +199,53 @@ previousLevel = 6
 levelColor = Color( 0.3414, 0.773438, 0.560794, 1 )
 
 [node name="LevelNode11" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
+modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
 position = Vector2( -144, 336 )
 level = 11
 previousLevel = 9
-levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
+levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
 
 [node name="LevelNode12" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
+modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
 position = Vector2( -216, 360 )
 level = 12
 previousLevel = 11
-levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
+levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
 
 [node name="LevelNode13" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
+modulate = Color( 0.52549, 0.619608, 0.898039, 1 )
 position = Vector2( -46, 330 )
 level = 13
 previousLevel = 11
-levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
+levelColor = Color( 0.52549, 0.619608, 0.898039, 1 )
 
 [node name="LevelNode14" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.156863, 0.952941, 0.898039, 1 )
+modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
 position = Vector2( 34, 356 )
 level = 14
 previousLevel = 13
-levelColor = Color( 0.156863, 0.952941, 0.898039, 1 )
+levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
 
 [node name="LevelNode15" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.156863, 0.952941, 0.898039, 1 )
+modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
 position = Vector2( 48, 264 )
 level = 15
 previousLevel = 14
-levelColor = Color( 0.156863, 0.952941, 0.898039, 1 )
+levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
 
 [node name="LevelNode16" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.156863, 0.952941, 0.898039, 1 )
+modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
 position = Vector2( 114, 346 )
 level = 16
 previousLevel = 14
-levelColor = Color( 0.156863, 0.952941, 0.898039, 1 )
+levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
 
 [node name="LevelNode17" parent="LevelNodes" instance=ExtResource( 8 )]
-modulate = Color( 0.156863, 0.952941, 0.898039, 1 )
+modulate = Color( 0.247059, 0.219608, 0.172549, 1 )
 position = Vector2( 216, 376 )
 level = 17
 previousLevel = 16
-levelColor = Color( 0.156863, 0.952941, 0.898039, 1 )
+levelColor = Color( 0.247059, 0.219608, 0.172549, 1 )
 
 [node name="LevelNode18" parent="LevelNodes" instance=ExtResource( 8 )]
 modulate = Color( 0.356863, 0.376471, 0.776471, 1 )
