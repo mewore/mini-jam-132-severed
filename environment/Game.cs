@@ -211,7 +211,15 @@ public class Game : Node2D
         }
         else if (@event.IsActionReleased("create_line") && obstacleBeingCreated != null)
         {
+            if (now - obstacleCreationStartedAt < beatTimer.WaitTime * .5f)
+            {
+                GD.Print("Too soon!");
+                obstacleBeingCreated.Place(0f);
+                obstacleBeingCreated = null;
+                return;
+            }
             float success = getLineSuccess();
+
             obstacleBeingCreated.Place(success);
             if (obstacleBeingCreated is ObstacleLine)
             {

@@ -28,7 +28,7 @@
 - [x] 💙 At the end of the level, the score is displayed (based on how much of the shapes are covered)
 - [x] 💙 Optimize the molds
 - [x] 💙 Lines decay and when they reach a size of 0, they disappear
-- [ ] 💙 Do not allow lines to be created too quickly
+- [x] 💙 Do not allow lines to be created too quickly
 - [ ] 💟 Publish `0.1.0`
 
 ### Basic features
