@@ -46,9 +46,11 @@ public class ObstacleLine : Line2D, Obstacle
 
         var collisionShape = GetNode<CollisionShape2D>("Body/CollisionShape2D");
         collisionShape.Disabled = false;
-        var segmentShape = collisionShape.Shape as SegmentShape2D;
-        segmentShape.A = Points[0];
-        segmentShape.B = Points[1];
+        var rectangleShape = new RectangleShape2D();
+        rectangleShape.Extents = new Vector2(Points[0].DistanceTo(Points[1]), Width) * .5f;
+        collisionShape.Rotation = Points[0].AngleToPoint(Points[1]);
+        collisionShape.Position = (Points[0] + Points[1]) * .5f;
+        collisionShape.Shape = rectangleShape;
         placed = true;
     }
 }
