@@ -47,6 +47,11 @@ public class Game : Node2D
     public override void _PhysicsProcess(float delta)
     {
         now += delta;
+        if (obstacleBeingCreated != null && getLineSuccess(1f) <= Mathf.Epsilon)
+        {
+            obstacleBeingCreated.Place(0f);
+            obstacleBeingCreated = null;
+        }
     }
 
     public override void _UnhandledInput(InputEvent @event)
