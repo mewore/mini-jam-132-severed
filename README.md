@@ -22,13 +22,14 @@
 - [x] 💙 Line creation with the [LINE] (Q/A/Z/Space/LMB) key (pressing it at one beat and letting go of it on another beat) - the line power meter is depleted and how much of it is utilized properly depends on how synced the pressing of the key is
 - [x] 💙 Slime molds avoid growing past lines
 - [x] 💙 The line creation is cancelled if the maximum line success is no matter at which point the [LINE] button is released
-- [ ] 💙 When a line is created onto a slime mold, the slime mold is cut and disintegrates partially
+- [x] 💙 When a line is created onto a slime mold, the slime mold is cut and disintegrates partially
 - [ ] 💙 When the level ends, the lines fade out and the score is displayed
 - [ ] 💙 Lines decay and when they reach a size of 0, they disappear
 - [ ] 💟 Publish `0.1.0`
 
 ### Basic features
 
+- [ ] 💙 The slime mold destroyed parts flash red before disappearing
 - [x] 💚 Areas and levels based on them
   ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)
 - [ ] 💙 Lock levels that haven't been reached yet
@@ -51,6 +52,7 @@
 
 ### Advanced features
 
+- [ ] 💙 The slime molds gradually become gray-ish as they become inactive
 - [ ] 💙 Show the level background at the end of the level
 - [ ] 💙 Nice transitions
 - [ ] 💙 Ability to view backgrounds
