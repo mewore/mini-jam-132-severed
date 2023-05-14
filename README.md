@@ -40,7 +40,7 @@
 - [x] 💙 Lock levels that haven't been reached yet
 - [x] 💙 Pause menu
 - [x] 💙 Auto-saving and auto-loading
-- [ ] 💙 Show the best scores of levels
+- [x] 💙 Show the best scores of levels
 - [ ] 💙 Ability to navigate to or display level backgrounds from the main menu
 - [ ] 💙 Volume controls
 - [ ] 💜 Backgrounds
