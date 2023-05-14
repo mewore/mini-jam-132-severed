@@ -29,6 +29,9 @@
 
 ### Basic features
 
+- [x] 💚 Areas and levels based on them
+  ![concept-areas.png](../../blob/main/concept-areas.png?raw=true)
+- [ ] 💙 Lock levels that haven't been reached yet
 - [ ] 💙 Pause menu
 - [ ] 💙 Auto-saving and auto-loading
 - [ ] 💙 Show the best scores of levels

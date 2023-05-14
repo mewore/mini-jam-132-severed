@@ -53,11 +53,12 @@ public class LevelNodeLine : Line2D, Selectable
 
     public void Update(LevelNode previousNode, LevelNode targetNode)
     {
+        Position = previousNode.Position;
         from = previousNode;
         to = targetNode;
         Points = new Vector2[]{
-            previousNode.Position,
-            targetNode.Position
+            Vector2.Zero,
+            targetNode.Position - previousNode.Position
         };
         Gradient.Colors = new Color[] { previousNode.LevelColor, targetNode.LevelColor };
         Visible = true;

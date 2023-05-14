@@ -17,6 +17,10 @@ public class LevelNode : Node2D
             if (value == 0 || Global.LevelExists(value))
             {
                 _level = value;
+                if (HasNode("Label"))
+                {
+                    GetNode<Label>("Label").Text = value.ToString();
+                }
                 EmitSignal(nameof(Changed));
             }
         }
@@ -54,11 +58,13 @@ public class LevelNode : Node2D
     public Color LevelColor => _levelColor;
 
     private Vector2 lastPosition;
+    private string lastName;
 
     public override void _Ready()
     {
         Modulate = _levelColor;
         lastPosition = Position;
+        checkName();
     }
 
     public override void _Process(float delta)
@@ -68,5 +74,26 @@ public class LevelNode : Node2D
             lastPosition = Position;
             EmitSignal(nameof(Changed));
         }
+        checkName();
+    }
+
+    private void checkName()
+    {
+        if (Engine.EditorHint && Name != lastName)
+        {
+            var digitsAtEnd = getDigitsAtEnd(Name);
+            if (digitsAtEnd != "")
+            {
+                level = digitsAtEnd.ToInt();
+            }
+            lastName = Name;
+        }
+    }
+
+    private static string getDigitsAtEnd(string input)
+    {
+        int numberOfDigitsAtEnd = 0;
+        for (var i = input.Length - 1; i >= 0 && char.IsNumber(input[i]); i--, numberOfDigitsAtEnd++) ;
+        return numberOfDigitsAtEnd > 0 ? input.Substring(input.Length - numberOfDigitsAtEnd) : "";
     }
 }
