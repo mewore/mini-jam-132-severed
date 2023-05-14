@@ -139,6 +139,13 @@ public class Global : Node
         return "res://scenes/levels/Level-" + level + ".tscn";
     }
 
+    public static bool BackgroundExists(int level) => new File().FileExists(GetBackgroundScenePath(level));
+
+    public static string GetBackgroundScenePath(int level)
+    {
+        return "res://scenes/backgrounds/Background-" + level + ".tscn";
+    }
+
     public static int GetLevelPathNumber(string levelPath)
     {
         Match match = LEVEL_NUMBER_REGEX.Match(levelPath);

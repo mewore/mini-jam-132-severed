@@ -2,8 +2,15 @@ using Godot;
 using System;
 
 [Tool]
-public class LevelNode : Node2D
+public class LevelNode : Node2D, Selectable
 {
+    private const float BOUNCE = .5f;
+    private const float BOUNCE_DECAY = .1f;
+    private const float SELECTION_RADIUS = 24f;
+    public const float SELECTION_RADIUS_SQUARED = SELECTION_RADIUS * SELECTION_RADIUS;
+
+    private static readonly Color UNSELECTABLE_COLOR = new Color(.5f, .5f, .5f);
+
     [Signal]
     public delegate void Changed();
 
@@ -52,17 +59,42 @@ public class LevelNode : Node2D
         {
             _levelColor = value;
             EmitSignal(nameof(Changed));
-            Modulate = _levelColor;
+            if (sprite != null)
+            {
+                SelfModulate = _levelColor;
+            }
         }
     }
     public Color LevelColor => _levelColor;
 
+    public string ScenePath => Global.GetBackgroundScenePath(level);
+
+    public Color Color => _levelColor;
+
+    public bool Hovered
+    {
+        set
+        {
+            if (value)
+            {
+                Scale = Vector2.One * (1f + BOUNCE);
+            }
+        }
+    }
+
+    public bool Selectable => (Engine.EditorHint || Global.LevelHasBeenCleared(level)) && Global.BackgroundExists(level);
+
+    public int TargetLevel => level;
+
     private Vector2 lastPosition;
     private string lastName;
+    private Sprite sprite;
 
     public override void _Ready()
     {
-        Modulate = _levelColor;
+        sprite = GetNode<Sprite>("Sprite");
+        sprite.SelfModulate = _levelColor;
+        Modulate = Selectable ? new Color(1f, 1f, 1f) : UNSELECTABLE_COLOR;
         lastPosition = Position;
         checkName();
     }
@@ -73,6 +105,10 @@ public class LevelNode : Node2D
         {
             lastPosition = Position;
             EmitSignal(nameof(Changed));
+        }
+        if (Scale.x > 1f)
+        {
+            Scale = new Vector2(Mathf.Lerp(Scale.x, 1f, BOUNCE_DECAY), Mathf.Lerp(Scale.y, 1f, BOUNCE_DECAY));
         }
         checkName();
     }

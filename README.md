@@ -41,7 +41,7 @@
 - [x] 💙 Pause menu
 - [x] 💙 Auto-saving and auto-loading
 - [x] 💙 Show the best scores of levels
-- [ ] 💙 Ability to navigate to or display level backgrounds from the main menu
+- [x] 💙 Ability to navigate to or display level backgrounds from the main menu
 - [ ] 💙 Volume controls
 - [ ] 💜 Backgrounds
 - [ ] 💛 Music

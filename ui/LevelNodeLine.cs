@@ -3,6 +3,9 @@ using System;
 
 public class LevelNodeLine : Line2D, Selectable
 {
+    private const int EDGE_SELECTION_RADIUS = 64;
+    public static readonly int EDGE_SELECTION_RADIUS_SQUARED = EDGE_SELECTION_RADIUS * EDGE_SELECTION_RADIUS;
+
     private const float THICKNESS = 10f;
     private const float HOVER_THICKNESS = 15f;
     private const float THICKNESS_DECAY = .1f;

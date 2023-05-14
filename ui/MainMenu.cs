@@ -4,9 +4,6 @@ using Godot;
 
 public class MainMenu : VBoxContainer
 {
-    private const int EDGE_SELECTION_DISTANCE = 64;
-    private static readonly int EDGE_SELECTION_DISTANCE_SQUARED = EDGE_SELECTION_DISTANCE * EDGE_SELECTION_DISTANCE;
-
     private float now = 0f;
 
     private Selectable hoveredNode;
@@ -68,14 +65,30 @@ public class MainMenu : VBoxContainer
 
     private Selectable getHovered(Vector2 position)
     {
-        float bestDistanceSquared = EDGE_SELECTION_DISTANCE_SQUARED;
+        float bestDistanceSquared = Mathf.Max(LevelNodeLine.EDGE_SELECTION_RADIUS_SQUARED, LevelNode.SELECTION_RADIUS_SQUARED);
         Selectable result = null;
+        foreach (LevelNode node in nodes)
+        {
+            if (node.Selectable)
+            {
+                float distanceSquared = node.GlobalPosition.DistanceSquaredTo(position);
+                if (distanceSquared < LevelNode.SELECTION_RADIUS_SQUARED && distanceSquared < bestDistanceSquared)
+                {
+                    result = node;
+                    bestDistanceSquared = distanceSquared;
+                }
+            }
+        }
+        if (result != null)
+        {
+            return result;
+        }
         foreach (LevelNodeLine line in lines)
         {
             if (line.Selectable)
             {
                 float distanceSquared = (line.GlobalPosition + (line.Points[0] + line.Points[1]) / 2).DistanceSquaredTo(position);
-                if (distanceSquared < bestDistanceSquared)
+                if (distanceSquared < LevelNodeLine.EDGE_SELECTION_RADIUS_SQUARED && distanceSquared < bestDistanceSquared)
                 {
                     result = line;
                     bestDistanceSquared = distanceSquared;
