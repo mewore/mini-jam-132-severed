@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://audio/level-clear.mp3" type="AudioStream" id=1]
 [ext_resource path="res://audio/GlobalSound.cs" type="Script" id=2]
 [ext_resource path="res://audio/level-enter.ogg" type="AudioStream" id=3]
+[ext_resource path="res://audio/main-menu-music.mp3" type="AudioStream" id=4]
+[ext_resource path="res://audio/ambient-noise-lab.ogg" type="AudioStream" id=5]
 
 [node name="GlobalSound" type="Node"]
 pause_mode = 2
@@ -10,9 +12,11 @@ script = ExtResource( 2 )
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 autoplay = true
+bus = "Music"
 
 [node name="MusicBackground" type="AudioStreamPlayer" parent="."]
 autoplay = true
+bus = "Music"
 
 [node name="MusicForeground" type="AudioStreamPlayer" parent="."]
 autoplay = true
@@ -30,3 +34,16 @@ bus = "SFX"
 volume_db = 0.901
 pitch_scale = 0.69
 bus = "SFX"
+
+[node name="MainMenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = 7.277
+autoplay = true
+bus = "Music"
+
+[node name="AmbientNoiseLab" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -5.245
+pitch_scale = 0.51
+autoplay = true
+bus = "Music"

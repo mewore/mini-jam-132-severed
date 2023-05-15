@@ -44,8 +44,8 @@
 - [x] 💙 Ability to navigate to or display level backgrounds from the main menu
 - [x] 💙 Master volume controls
 - [ ] 💜 Backgrounds
-- [ ] 💛 Main menu music
-- [ ] 💛 Main menu ambience
+- [x] 💛 Main menu music
+- [x] 💛 Main menu ambience
 - [ ] 💛 Gameplay music
 - [x] 💛 Line start creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-4/
 - [x] 💛 Line finish creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-3/

@@ -22,6 +22,7 @@ public class MainMenu : VBoxContainer
 
         backgroundGlow = GetNode<Node2D>("Background/BackgroundGlow");
         targetBackgroundGlowColor = initialBackgroundGlowColor = backgroundGlow.SelfModulate;
+        GlobalSound.GetInstance(this).MainMenuMusic = GlobalSound.GetInstance(this).AmbienetNoiseLab = true;
     }
 
     public override void _Process(float delta)
@@ -60,6 +61,7 @@ public class MainMenu : VBoxContainer
             Global.CurrentLevel = hoveredNode.TargetLevel;
             GetNode<Overlay>("Overlay").RequestTransition(hoveredNode.ScenePath);
             GlobalSound.GetInstance(this).PlayEnterLevel();
+            GlobalSound.GetInstance(this).MainMenuMusic = GlobalSound.GetInstance(this).AmbienetNoiseLab = false;
         }
     }
 

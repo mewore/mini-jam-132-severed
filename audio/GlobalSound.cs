@@ -8,10 +8,18 @@ public class GlobalSound : Node
     private readonly AudioFader musicForegroundFader = new BusFader("MusicForeground");
     public bool MusicForeground { set => musicForegroundFader.Enabled = value; }
 
+    private AudioFader mainMenuMusicFader;
+    public bool MainMenuMusic { set => mainMenuMusicFader.Enabled = value; }
+
+    private AudioFader ambientNoiseLabFader;
+    public bool AmbienetNoiseLab { set => ambientNoiseLabFader.Enabled = value; }
+
     public override void _Ready()
     {
         clearLevel = GetNode<AudioStreamPlayer>("ClearLevel");
         lose = GetNode<AudioStreamPlayer>("Lose");
+        mainMenuMusicFader = new AudioPlayerFader(GetNode<AudioStreamPlayer>("MainMenuMusic"));
+        ambientNoiseLabFader = new AudioPlayerFader(GetNode<AudioStreamPlayer>("AmbientNoiseLab"));
     }
 
     public void PlayClearLevel()

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/ambient-noise-lab.ogg-6d64678333c8e8a4c81d8b517f164ac8.oggstr"
+
+[deps]
+
+source_file="res://audio/ambient-noise-lab.ogg"
+dest_files=[ "res://.import/ambient-noise-lab.ogg-6d64678333c8e8a4c81d8b517f164ac8.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

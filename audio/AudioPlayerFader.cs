@@ -1,29 +1,29 @@
 using Godot;
 
-public class BusFader : AudioFader
+public class AudioPlayerFader : AudioFader
 {
     private const float MIN_VOLUME = -40f;
     private const float MAX_VOLUME = 0f;
     private const float VOLUME_CHANGE_PER_SECOND = 2f * (MAX_VOLUME - MIN_VOLUME);
 
-    private readonly int busIndex;
+    private readonly AudioStreamPlayer player;
 
     private float targetVolume;
     public bool Enabled { set => targetVolume = value ? MAX_VOLUME : MIN_VOLUME; }
 
     private float Volume
     {
-        get => AudioServer.GetBusVolumeDb(busIndex);
+        get => player.VolumeDb;
         set
         {
-            AudioServer.SetBusVolumeDb(busIndex, value);
-            AudioServer.SetBusMute(busIndex, value <= MIN_VOLUME + Mathf.Epsilon);
+            player.VolumeDb = value;
+            player.StreamPaused = value <= MIN_VOLUME + Mathf.Epsilon;
         }
     }
 
-    public BusFader(string busName)
+    public AudioPlayerFader(AudioStreamPlayer player)
     {
-        busIndex = AudioServer.GetBusIndex(busName);
+        this.player = player;
     }
 
     public void Process(float delta)
