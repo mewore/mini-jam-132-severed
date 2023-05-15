@@ -6,6 +6,9 @@ public class Game : Node2D
     [Signal]
     public delegate void GameOver();
 
+    [Signal]
+    public delegate void RestartRequested();
+
     private Node2D timerLine;
     private Timer levelTimer;
     private Timer beatTimer;
@@ -204,7 +207,7 @@ public class Game : Node2D
             }
             else if (@event.IsActionPressed("restart"))
             {
-                GetTree().ReloadCurrentScene();
+                EmitSignal(nameof(RestartRequested));
             }
             return;
         }
@@ -270,6 +273,7 @@ public class Game : Node2D
 
     public void _on_LevelTimer_timeout()
     {
+        GlobalSound.GetInstance(this).PlayClearLevel();
         GetNode<AnimationPlayer>("AnimationPlayer").Play("end_game");
     }
 

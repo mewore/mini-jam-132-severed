@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://environment/Level.cs" type="Script" id=1]
 [ext_resource path="res://scenes/MainMenu.tscn" type="PackedScene" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://entities/obstacle/create-start.mp3" type="AudioStream" id=14]
 [ext_resource path="res://entities/obstacle/create-success.mp3" type="AudioStream" id=15]
 [ext_resource path="res://entities/mold/damage.ogg" type="AudioStream" id=16]
+[ext_resource path="res://ui/Overlay.tscn" type="PackedScene" id=17]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
@@ -261,6 +262,7 @@ align = 1
 valign = 1
 
 [node name="PauseLayer" type="CanvasLayer" parent="."]
+layer = 5
 visible = false
 
 [node name="PauseBackground" type="Sprite" parent="PauseLayer"]
@@ -313,7 +315,10 @@ margin_right = 300.0
 margin_bottom = 229.0
 text = "Main menu"
 
+[node name="Overlay" parent="." instance=ExtResource( 17 )]
+
 [connection signal="GameOver" from="Game" to="." method="_on_Game_GameOver"]
+[connection signal="RestartRequested" from="Game" to="." method="_on_Game_RestartRequested"]
 [connection signal="timeout" from="Game/LevelTimer" to="Game" method="_on_LevelTimer_timeout"]
 [connection signal="animation_finished" from="Game/AnimationPlayer" to="Game" method="_on_AnimationPlayer_animation_finished"]
 [connection signal="pressed" from="PauseLayer/Control/PauseMenu/ContinueButton" to="." method="_on_ContinueButton_pressed"]

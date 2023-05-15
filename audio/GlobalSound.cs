@@ -19,6 +19,11 @@ public class GlobalSound : Node
         clearLevel.Play();
     }
 
+    public void PlayEnterLevel()
+    {
+        GetNode<AudioStreamPlayer>("EnterLevel").Play();
+    }
+
     public void PlayLose()
     {
         lose.Play();

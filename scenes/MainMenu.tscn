@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://ui/title-theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/Title.cs" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://ui/LevelNodeLine.tscn" type="PackedScene" id=9]
 [ext_resource path="res://ui/main-menu-theme-small.tres" type="Theme" id=10]
 [ext_resource path="res://ui/VolumeSlider.cs" type="Script" id=11]
+[ext_resource path="res://ui/Overlay.tscn" type="PackedScene" id=12]
 
 [sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
@@ -135,7 +136,7 @@ margin_left = 100.0
 margin_right = 228.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 128, 32 )
-value = 50.0
+value = 88.0
 script = ExtResource( 11 )
 
 [node name="LevelNodes" parent="." instance=ExtResource( 7 )]
@@ -287,4 +288,8 @@ level = 20
 previousLevel = 19
 levelColor = Color( 0.521569, 0.211765, 0.937255, 1 )
 
+[node name="Overlay" parent="." instance=ExtResource( 12 )]
+visible = false
+
 [connection signal="Refreshed" from="LevelNodes" to="." method="_on_LevelNodes_Refreshed"]
+[connection signal="DoneDisappearing" from="Overlay" to="." method="_on_Overlay_DoneDisappearing"]

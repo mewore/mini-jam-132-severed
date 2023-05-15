@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://ui/overlay-blank.png" type="Texture" id=1]
+[ext_resource path="res://scenes/backgrounds/test3.png" type="Texture" id=2]
+[ext_resource path="res://ui/Overlay.cs" type="Script" id=3]
+
+[sub_resource type="Shader" id=6]
+code = "shader_type canvas_item;
+
+uniform sampler2D dissolve_pattern;
+uniform float dissolve_state : hint_range(0,1.1) = 0;
+
+void fragment() {
+    COLOR = texture(TEXTURE, UV);
+    float pattern_val = texture(dissolve_pattern, UV).r;
+    COLOR.a *= step(dissolve_state, pattern_val);
+}
+"
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
+shader_param/dissolve_state = 0.0
+shader_param/dissolve_pattern = ExtResource( 2 )
+
+[node name="Overlay" type="CanvasLayer"]
+pause_mode = 2
+script = ExtResource( 3 )
+
+[node name="OverlayColor" type="Sprite" parent="."]
+self_modulate = Color( 0.133333, 0.0901961, 0.223529, 1 )
+material = SubResource( 7 )
+texture = ExtResource( 1 )
+centered = false

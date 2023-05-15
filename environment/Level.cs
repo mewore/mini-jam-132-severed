@@ -12,27 +12,37 @@ public class Level : Node2D
 
     private CanvasLayer pauseLayer;
 
+    private Overlay overlay;
+
+
     private bool paused = false;
     private bool Paused
     {
         get => paused;
         set
         {
-            paused = value;
-            GetTree().Paused = value;
-            pauseLayer.Visible = value;
+            GD.Print("PAUSED: ", paused, " -> ", value && !overlay.Transitioning);
+            paused = value && !overlay.Transitioning;
+            GetTree().Paused = paused || !overlay.CompletelyTransparent;
+            pauseLayer.Visible = paused;
+            overlay.PauseMode = paused ? PauseModeEnum.Stop : PauseModeEnum.Process;
         }
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        overlay = GetNode<Overlay>("Overlay");
         if (Engine.EditorHint)
         {
             levelNumber = Global.GetLevelPathNumber(GetTree().EditedSceneRoot.Filename.ToString());
             if (Global.CurrentLevel <= 0 && levelNumber > 0)
             {
                 Global.CurrentLevel = levelNumber;
+            }
+            else
+            {
+                GetNode<Button>("PauseLayer/Control/PauseMenu/RestartButton").Disabled = true;
             }
         }
         pauseLayer = GetNode<CanvasLayer>("PauseLayer");
@@ -42,12 +52,16 @@ public class Level : Node2D
 
     public void _on_RestartButton_pressed()
     {
-        GetTree().ReloadCurrentScene();
+        GlobalSound.GetInstance(this).PlayEnterLevel();
+        Paused = false;
+        overlay.RequestTransition("");
     }
 
     public void _on_MainMenuButton_pressed()
     {
-        GetTree().ChangeSceneTo(mainMenuScene);
+        GlobalSound.GetInstance(this).PlayEnterLevel();
+        Paused = false;
+        overlay.RequestTransition(mainMenuScene);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -64,6 +78,13 @@ public class Level : Node2D
 
     public void _on_Game_GameOver()
     {
-        GetTree().ChangeSceneTo(mainMenuScene);
+        GlobalSound.GetInstance(this).PlayEnterLevel();
+        overlay.RequestTransition(mainMenuScene);
+    }
+
+    public void _on_Game_RestartRequested()
+    {
+        GlobalSound.GetInstance(this).PlayEnterLevel();
+        overlay.RequestTransition("");
     }
 }

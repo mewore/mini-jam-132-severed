@@ -263,7 +263,7 @@ public class SlimeMoldBranch : Line2D
         var result = false;
         foreach (var child in children)
         {
-            result = result || child.TestIntersection(firstPoint, secondPoint, success);
+            result = child.TestIntersection(firstPoint, secondPoint, success) || result;
         }
         firstPoint = ToLocal(firstPoint);
         secondPoint = ToLocal(secondPoint);

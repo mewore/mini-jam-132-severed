@@ -58,7 +58,8 @@ public class MainMenu : VBoxContainer
         {
             GD.Print("Navigating to: " + hoveredNode.ScenePath);
             Global.CurrentLevel = hoveredNode.TargetLevel;
-            GetTree().ChangeScene(hoveredNode.ScenePath);
+            GetNode<Overlay>("Overlay").RequestTransition(hoveredNode.ScenePath);
+            GlobalSound.GetInstance(this).PlayEnterLevel();
         }
     }
 
@@ -103,5 +104,10 @@ public class MainMenu : VBoxContainer
         var container = GetNode<LevelNodeContainer>("LevelNodes");
         nodes = container.Nodes;
         lines = container.Lines;
+    }
+
+    public void _on_Overlay_DoneDisappearing()
+    {
+        GetTree().Paused = false;
     }
 }

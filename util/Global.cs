@@ -90,6 +90,10 @@ public class Global : Node
 
     public static bool TryWinLevel(int score)
     {
+        if (currentLevel <= NO_LEVEL)
+        {
+            return false;
+        }
         while (bestScores.Count < currentLevel)
         {
             bestScores.Add(DEFAULT_SCORE);

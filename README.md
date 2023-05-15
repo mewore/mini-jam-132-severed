@@ -44,15 +44,17 @@
 - [x] 💙 Ability to navigate to or display level backgrounds from the main menu
 - [x] 💙 Master volume controls
 - [ ] 💜 Backgrounds
-- [ ] 💛 Music
+- [ ] 💛 Main menu music
+- [ ] 💛 Main menu ambience
+- [ ] 💛 Gameplay music
 - [x] 💛 Line start creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-4/
 - [x] 💛 Line finish creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-3/
 - [x] 💛 Line fail creation SFX - https://www.zapsplat.com/music/cartoon-water-spill-or-drop-1/
-- [x] 💛 Mold disintegration SFX
-- [ ] 💛 Choose level SFX
-- [ ] 💛 Clear level SFX
+- [x] 💛 Mold disintegration SFX - https://www.zapsplat.com/music/bicycle-hand-pump-pumping-air-out-into-slime-or-gunge-with-hiss-and-bubbles-version-1/
+- [x] 💛 Choose level SFX - https://www.zapsplat.com/music/a-pair-of-soccer-boots-set-down-on-dirt-1/
+- [x] 💛 Clear level SFX - https://www.zapsplat.com/music/alert-tone-wooden-mallet-and-a-bright-chime-positive-sound-3/
+- [ ] 💛 Lab ambience - https://www.zapsplat.com/music/empty-warehouse-ambience-room-tone-quiet-hum-fans/
 - [ ] 💛 Calculate score SFX
-- [ ] 💛 Line create fail SFX
 - [ ] 💜 Cover art
 - [ ] 💟 Publish `0.2.0`
 
@@ -64,7 +66,7 @@
 - [ ] 💙 Show warnings for slime molds that are about to spawn
 - [ ] 💙 Show the user if they have tried to make an obstacle too soon (red flashing text, camera shake, etc.)
 - [ ] 💙 Show the level background at the end of the level
-- [ ] 💙 Nice transitions
+- [x] 💙 Nice transitions
 - [ ] 💙 Ability to view backgrounds
 - [ ] 💜 Icon
 - [ ] 💟 Publish `0.3.0`
