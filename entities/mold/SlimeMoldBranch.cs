@@ -258,18 +258,19 @@ public class SlimeMoldBranch : Line2D
         Width = initialWidth * beatWidthMultiplier;
     }
 
-    public void TestIntersection(Vector2 firstPoint, Vector2 secondPoint, float success)
+    public bool TestIntersection(Vector2 firstPoint, Vector2 secondPoint, float success)
     {
+        var result = false;
         foreach (var child in children)
         {
-            child.TestIntersection(firstPoint, secondPoint, success);
+            result = result || child.TestIntersection(firstPoint, secondPoint, success);
         }
         firstPoint = ToLocal(firstPoint);
         secondPoint = ToLocal(secondPoint);
 
         if (!lineIsInRectangle(firstPoint, secondPoint, getBoundingRectangle()))
         {
-            return;
+            return result;
         }
 
         var damage = vulnerability * success;
@@ -306,6 +307,7 @@ public class SlimeMoldBranch : Line2D
             {
                 damageToChildren = Mathf.Max(damageToChildren, damage - (totalLength - intersectionPos));
             }
+            result = true;
         }
 
         if (damageToChildren > 0f)
@@ -319,6 +321,7 @@ public class SlimeMoldBranch : Line2D
         {
             parent.takeDamageAtEnd(damageToParent);
         }
+        return result;
     }
 
     private void takeDamageAtBeginning(float damage)

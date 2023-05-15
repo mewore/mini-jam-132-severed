@@ -54,6 +54,10 @@ mp3={
 "loop": false,
 "loop_offset": 0
 }
+ogg_vorbis={
+"loop": false,
+"loop_offset": 0
+}
 
 [input]
 

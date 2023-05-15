@@ -233,9 +233,14 @@ public class Game : Node2D
             if (obstacleBeingCreated is ObstacleLine)
             {
                 var line = obstacleBeingCreated as ObstacleLine;
+                var hasDamaged = false;
                 foreach (var moldBranch in GetNode<SlimeMold>("SlimeMold").Branches)
                 {
-                    moldBranch.TestIntersection(line.Points[0], line.Points[1], success);
+                    hasDamaged = hasDamaged || moldBranch.TestIntersection(line.Points[0], line.Points[1], success);
+                }
+                if (hasDamaged)
+                {
+                    mold.GetNode<AudioStreamPlayer>("Damage").Play();
                 }
             }
             obstacleContainer.GetNode<AudioStreamPlayer>("CreateSuccess").Play();
