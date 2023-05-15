@@ -81,7 +81,7 @@ public class Game : Node2D
         levelTimer = GetNode<Timer>("LevelTimer");
         beatTimer = GetNode<Timer>("BeatTimer");
 
-        obstacleContainer = GetNode("Lines");
+        obstacleContainer = GetNode("Obstacles");
 
         mold = GetNode<SlimeMold>("SlimeMold");
 
@@ -182,6 +182,7 @@ public class Game : Node2D
         {
             obstacleBeingCreated.Place(0f);
             obstacleBeingCreated = null;
+            obstacleContainer.GetNode<AudioStreamPlayer>("CreateFail").Play();
         }
     }
 
@@ -214,6 +215,7 @@ public class Game : Node2D
             initialClosenessToBeat = getClosenessToBeat();
             obstacleContainer.AddChild(obstacleBeingCreated as Node);
             obstacleCreationStartedAt = now;
+            obstacleContainer.GetNode<AudioStreamPlayer>("CreateStart").Play();
         }
         else if (@event.IsActionReleased("create_line") && obstacleBeingCreated != null)
         {
@@ -222,6 +224,7 @@ public class Game : Node2D
                 GD.Print("Too soon!");
                 obstacleBeingCreated.Place(0f);
                 obstacleBeingCreated = null;
+                obstacleContainer.GetNode<AudioStreamPlayer>("CreateFail").Play();
                 return;
             }
             float success = getLineSuccess();
@@ -235,6 +238,7 @@ public class Game : Node2D
                     moldBranch.TestIntersection(line.Points[0], line.Points[1], success);
                 }
             }
+            obstacleContainer.GetNode<AudioStreamPlayer>("CreateSuccess").Play();
             obstacleBeingCreated = null;
         }
     }

@@ -45,8 +45,9 @@
 - [x] 💙 Master volume controls
 - [ ] 💜 Backgrounds
 - [ ] 💛 Music
-- [ ] 💛 Line start creation SFX
-- [ ] 💛 Line finish creation SFX
+- [x] 💛 Line start creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-4/
+- [x] 💛 Line finish creation SFX - https://www.zapsplat.com/music/cartoon-water-drip-single-drop-3/
+- [x] 💛 Line fail creation SFX - https://www.zapsplat.com/music/cartoon-water-spill-or-drop-1/
 - [ ] 💛 Mold disintegration SFX
 - [ ] 💛 Choose level SFX
 - [ ] 💛 Clear level SFX

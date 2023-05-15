@@ -17,7 +17,9 @@ autoplay = true
 
 [node name="ClearLevel" type="AudioStreamPlayer" parent="."]
 pitch_scale = 0.69
+bus = "SFX"
 
 [node name="Lose" type="AudioStreamPlayer" parent="."]
 volume_db = 0.901
 pitch_scale = 0.69
+bus = "SFX"

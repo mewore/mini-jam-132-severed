@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/create-fail.mp3-c86fe43586ff28a5414aaf97738b25b2.mp3str"
+
+[deps]
+
+source_file="res://entities/obstacle/create-fail.mp3"
+dest_files=[ "res://.import/create-fail.mp3-c86fe43586ff28a5414aaf97738b25b2.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

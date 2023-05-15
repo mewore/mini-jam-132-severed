@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/create-success.mp3-018e6ed19d1ec8599fd2b091323954ab.mp3str"
+
+[deps]
+
+source_file="res://entities/obstacle/create-success.mp3"
+dest_files=[ "res://.import/create-success.mp3-018e6ed19d1ec8599fd2b091323954ab.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0
