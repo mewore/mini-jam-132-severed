@@ -42,7 +42,7 @@
 - [x] 💙 Auto-saving and auto-loading
 - [x] 💙 Show the best scores of levels
 - [x] 💙 Ability to navigate to or display level backgrounds from the main menu
-- [ ] 💙 Volume controls
+- [x] 💙 Master volume controls
 - [ ] 💜 Backgrounds
 - [ ] 💛 Music
 - [ ] 💛 Line start creation SFX
@@ -58,6 +58,7 @@
 ### Advanced features
 
 - [ ] 💛 Pause/unpause SFX
+- [ ] 💙 SFX/Music balance volume controls
 - [ ] 💙 Exit button
 - [ ] 💙 Show warnings for slime molds that are about to spawn
 - [ ] 💙 Show the user if they have tried to make an obstacle too soon (red flashing text, camera shake, etc.)

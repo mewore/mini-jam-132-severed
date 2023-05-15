@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://ui/title-theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/Title.cs" type="Script" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://ui/LevelNodeContainer.tscn" type="PackedScene" id=7]
 [ext_resource path="res://ui/LevelNode.tscn" type="PackedScene" id=8]
 [ext_resource path="res://ui/LevelNodeLine.tscn" type="PackedScene" id=9]
+[ext_resource path="res://ui/main-menu-theme-small.tres" type="Theme" id=10]
+[ext_resource path="res://ui/VolumeSlider.cs" type="Script" id=11]
 
 [sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
@@ -108,7 +110,7 @@ type = 3
 [node name="Margin" type="Control" parent="."]
 margin_top = 106.0
 margin_right = 1024.0
-margin_bottom = 596.0
+margin_bottom = 564.0
 rect_min_size = Vector2( 0, 10 )
 mouse_filter = 1
 size_flags_vertical = 3
@@ -117,10 +119,24 @@ __meta__ = {
 }
 
 [node name="Options" type="HBoxContainer" parent="."]
-margin_top = 600.0
+margin_top = 568.0
 margin_right = 1024.0
 margin_bottom = 600.0
-alignment = 2
+theme = ExtResource( 10 )
+
+[node name="VolumeLabel" type="Label" parent="Options"]
+margin_top = 6.0
+margin_right = 96.0
+margin_bottom = 26.0
+text = " Volume"
+
+[node name="VolumeSlider" type="HSlider" parent="Options"]
+margin_left = 100.0
+margin_right = 228.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 128, 32 )
+value = 50.0
+script = ExtResource( 11 )
 
 [node name="LevelNodes" parent="." instance=ExtResource( 7 )]
 position = Vector2( 512, 152 )

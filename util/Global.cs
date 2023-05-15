@@ -62,9 +62,7 @@ public class Global : Node
     private const string GAME_DATA_FILE = "gamedata";
     private const string SCORES_KEY = "scores";
 
-    private const string MASTER_VOLUME_KEY = "masterVolume";
-    private const string SFX_VOLUME_KEY = "sfxVolume";
-    private const string MUSIC_VOLUME_KEY = "musicVolume";
+    private const string VOLUME_KEY = "volume";
     private const string QUALITY_KEY = "quality";
 
     private static List<int> bestScores = new List<int>();
@@ -183,12 +181,24 @@ public class Global : Node
         return result;
     }
 
+    private static Dictionary<string, int> godotDictionaryToDictionary(Godot.Collections.Dictionary dictionary, Dictionary<string, int> fallback)
+    {
+        if (dictionary == null)
+        {
+            return fallback;
+        }
+        Dictionary<string, int> result = new Dictionary<string, int>(dictionary.Count);
+        foreach (object key in dictionary.Keys)
+        {
+            result[key.ToString()] = Convert.ToInt32(dictionary[key]);
+        }
+        return result;
+    }
+
     public static void SaveSettings()
     {
         var data = new Dictionary<string, object>();
-        data.Add(MASTER_VOLUME_KEY, settings.MasterVolume);
-        data.Add(SFX_VOLUME_KEY, settings.SfxVolume);
-        data.Add(MUSIC_VOLUME_KEY, settings.MusicVolume);
+        data.Add(VOLUME_KEY, settings.Volume);
         data.Add(QUALITY_KEY, (int)settings.Quality);
         SaveData(SETTINGS_SAVE_FILE, data);
     }
@@ -209,13 +219,7 @@ public class Global : Node
 
         // Generally ignoring exceptions like this is a bad idea, but keys not being present is to be expected;
 
-        try { settings.MasterVolume = Convert.ToInt32(data[MASTER_VOLUME_KEY]); }
-        catch (KeyNotFoundException) { }
-
-        try { settings.SfxVolume = Convert.ToInt32(data[SFX_VOLUME_KEY]); }
-        catch (KeyNotFoundException) { }
-
-        try { settings.MusicVolume = Convert.ToInt32(data[MUSIC_VOLUME_KEY]); }
+        try { settings.Volume = godotDictionaryToDictionary((Godot.Collections.Dictionary)data[VOLUME_KEY], settings.Volume); }
         catch (KeyNotFoundException) { }
 
         try { settings.Quality = (GameQuality)(Convert.ToInt32(data[QUALITY_KEY])); }
@@ -225,6 +229,7 @@ public class Global : Node
         }
         catch (KeyNotFoundException) { }
     }
+
 
     private static void SaveData(string save_name, Dictionary<string, object> data)
     {
@@ -333,6 +338,16 @@ public class Global : Node
 
 public class GameSettings
 {
+    public static string MASTER_BUS_NAME = "Master";
+    private static int MIN_DB = -60;
+    private static int MAX_DB = 6;
+
+    public Dictionary<string, int> Volume = new Dictionary<string, int>() {
+        {MASTER_BUS_NAME, 50},
+        {"SFX", 50},
+        {"Music", 50},
+    };
+
     public int MasterVolume = 20;
     public float NormalizedMasterVolume { get => MasterVolume * .01f; }
 
@@ -343,6 +358,10 @@ public class GameSettings
     public float NormalizedMusicVolume { get => MusicVolume * .01f; }
 
     public GameQuality Quality = GameQuality.MEDIUM;
+
+    public static float PercentageToDb(int percentage) => PercentageToDb((float)percentage);
+    public static float PercentageToDb(double percentage) => PercentageToDb((float)percentage);
+    public static float PercentageToDb(float percentage) => Mathf.Lerp(MIN_DB, MAX_DB, percentage * .01f);
 }
 
 public enum GameQuality
